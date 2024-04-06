@@ -1,0 +1,39 @@
+
+
+  
+.loginsignup-field{
+    position: absolute;
+    width: 24%;
+    max-width: 500px;
+    background: white;
+    border: 1px solid black;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    /* margin: 5px; */
+    right: 25rem;
+}
+
+.form-input {
+    display: flex;
+    margin: 2.5rem 0rem;
+    max-width: 65rem;
+}
+
+.required-field::after {
+    content: "*";
+    color: red;
+}
+
+.error {
+    position: absolute;
+    left: 34.2rem;
+    margin-top: -1.1rem;
+    font-size: smaller;
+    color: red;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

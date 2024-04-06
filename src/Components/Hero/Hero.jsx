@@ -1,26 +1,30 @@
 import React from "react";
 import "./Hero.css";
 import hero_image from "../Assets/hero_image.png";
-import hand_icon from "../Assets/hand_icon.png";
 import arrow_icon from "../Assets/arrow.png";
+import { Link } from 'react-router-dom'
+import Shoora from '../Assets/Shoora.png'
 
 const Hero = () => {
   return (
     <div className="hero">
       <div className="hero-left">
-        <h2>NEW ARRIVALS ONLY</h2>
+        <h2>Welcome to Shoora Mall<img className="shoora" src={Shoora} alt="" /></h2>
+        <h3 className="hindi-tagline"> आजीवन आय से यारी , करो  खरीदारी ।</h3>
         <div>
           <div className="hero-hand-icon">
-            <p>new</p>
-            <img src={hand_icon} alt="" />
+            <p>Your</p>
+            
           </div>
-          <p>collections</p>
-          <p>for everyone</p>
+          <p>one stop destination</p>
+          <p>for all everyday needs</p>
         </div>
-        <div className="hero-latest-btn">
-          <div>Latest Collection</div>
-          <img src={arrow_icon} alt="" />
-        </div>
+        <Link to='/login' style={{ textDecoration: 'none' }}>
+          <div className="hero-latest-btn">
+            <div>Register</div>
+            <img src={arrow_icon} alt="" />
+          </div>
+        </Link>
       </div>
       <div className="hero-right">
         <img src={hero_image} alt="hero" />

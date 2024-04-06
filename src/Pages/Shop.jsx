@@ -11,10 +11,10 @@ const Shop = () => {
   const [newcollection, setNewCollection] = useState([]);
 
   const fetchInfo = () => { 
-    fetch('http://localhost:4000/popularinwomen') 
+    fetch('http://localhost:8080/popularinwomen') 
             .then((res) => res.json()) 
             .then((data) => setPopular(data))
-    fetch('http://localhost:4000/newcollections') 
+    fetch('http://localhost:8080/newcollections') 
             .then((res) => res.json()) 
             .then((data) => setNewCollection(data))
     }
@@ -27,10 +27,10 @@ const Shop = () => {
   return (
     <div>
       <Hero/>
-      <Popular data={popular}/>
-      <Offers/>
-      <NewCollections data={newcollection}/>
-      <NewsLetter/>
+      {/* <Popular data={popular}/> */}
+      {/* <Offers/> */}
+      {/* <NewCollections data={newcollection}/> */}
+      {/* <NewsLetter/> */}
     </div>
   )
 }

@@ -3,13 +3,14 @@ import "./CSS/ShopCategory.css";
 import dropdown_icon from '../Components/Assets/dropdown_icon.png'
 import Item from "../Components/Item/Item";
 import { Link } from "react-router-dom";
+import grocery from '../Components/Assets/grocery.png'
 
 const ShopCategory = (props) => {
 
   const [allproducts, setAllProducts] = useState([]);
 
   const fetchInfo = () => { 
-    fetch('http://localhost:4000/allproducts') 
+    fetch('http://localhost:8080/allproducts') 
             .then((res) => res.json()) 
             .then((data) => setAllProducts(data))
     }
@@ -20,10 +21,14 @@ const ShopCategory = (props) => {
     
   return (
     <div className="shopcategory">
-      <img src={props.banner} className="shopcategory-banner" alt="" />
+      {/* <img src={props.banner} className="shopcategory-banner" alt="" /> */}
       <div className="shopcategory-indexSort">
         <p><span>Showing 1 - 12</span> out of 54 Products</p>
         <div className="shopcategory-sort">Sort by  <img src={dropdown_icon} alt="" /></div>
+      </div>
+      <div className="coming-soon">
+        <img src={grocery} alt="" />
+        <p>Coming Soon!</p>
       </div>
       <div className="shopcategory-products">
         {allproducts.map((item,i) => {
