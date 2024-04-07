@@ -3,6 +3,7 @@ import "./RegistrationForm.css";
 import { indianStates } from "../../Utils/signup.util";
 
 function RegistrationForm(props) {
+  // The registration form state
   const [formData, setFormData] = useState({
     guideId: "",
     fullName: "",
@@ -15,8 +16,14 @@ function RegistrationForm(props) {
     state: "",
     pincode: "",
   });
+
+  // The tnc checkbox state
+  const [tncCheckbox, setTncCheckbox] = useState(false);
+
+  // The state of form errors
   const [errors, setErrors] = useState({});
 
+  // Updates form state on any change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -25,6 +32,7 @@ function RegistrationForm(props) {
     });
   };
 
+  // Post api call on signup
   const signUp = async () => {
     let dataObj;
     console.log("Signup called!");
@@ -55,6 +63,7 @@ function RegistrationForm(props) {
     }
   };
 
+  // Validates the forms fields
   const validateForm = () => {
     let errors = {};
     let formIsValid = true;
@@ -128,12 +137,16 @@ function RegistrationForm(props) {
       errors["pincode"] = "Enter a valid 6 digit pincode";
     }
 
+    if(!tncCheckbox){
+      formIsValid = false;
+      errors["termsAndConditions"] = "Terms and conditions should be accepted"
+    }
     setErrors(errors);
     return formIsValid;
   };
 
   return (
-    <div>
+    <div className="signup-container">
       <h3>Enter your details</h3>
       <div className="signUp-form">
         <div className="form-input">
@@ -300,8 +313,15 @@ function RegistrationForm(props) {
         </div>
 
         <div className="loginsignup-agree">
-          <input type="checkbox" name="" id="" />
+          <input
+            type="checkbox"
+            name=""
+            id=""
+            defaultChecked={tncCheckbox}
+            onChange={() => setTncCheckbox(!tncCheckbox)}
+          />
           <p>By continuing, i agree to the terms of use & privacy policy.</p>
+        {/* <div className="error">{errors.termsAndConditions}</div> */}
         </div>
 
         <button
