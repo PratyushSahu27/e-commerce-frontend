@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./RegistrationForm.css";
+import { indianStates } from "../../Utils/signup.util";
 
 function RegistrationForm(props) {
   const [formData, setFormData] = useState({
@@ -16,43 +17,6 @@ function RegistrationForm(props) {
   });
   const [errors, setErrors] = useState({});
 
-  const indianStates = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry",
-  ];
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -63,7 +27,7 @@ function RegistrationForm(props) {
 
   const signUp = async () => {
     let dataObj;
-    console.log('Signup called!')
+    console.log("Signup called!");
     if (validateForm()) {
       await fetch("http://162.240.173.162:8080/signup", {
         method: "POST",
@@ -86,9 +50,8 @@ function RegistrationForm(props) {
         alert(dataObj.errors);
       }
       console.log("Form submitted:", formData);
-    }
-    else{
-      console.log('Form submission invalid')
+    } else {
+      console.log("Form submission invalid");
     }
   };
 
@@ -104,8 +67,8 @@ function RegistrationForm(props) {
     if (!formData.phoneNumber) {
       formIsValid = false;
       errors["phoneNumber"] = "Phone Number cannot be empty";
-    } 
-    
+    }
+
     if (formData.phoneNumber.length !== 10) {
       formIsValid = false;
       errors["phoneNumber"] = "Enter a valid 10 digit phone number";
@@ -119,8 +82,8 @@ function RegistrationForm(props) {
     if (!formData.email) {
       formIsValid = false;
       errors["email"] = "Email cannot be empty";
-    } 
-    
+    }
+
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
       formIsValid = false;
       errors["email"] = "Please enter a valid email address";
@@ -129,8 +92,8 @@ function RegistrationForm(props) {
     if (!formData.password) {
       formIsValid = false;
       errors["password"] = "Password cannot be empty";
-    } 
-    
+    }
+
     if (formData.password.length < 6) {
       formIsValid = false;
       errors["password"] = "Password must be at least 6 characters long";
@@ -159,7 +122,7 @@ function RegistrationForm(props) {
     if (!formData.pincode) {
       formIsValid = false;
       errors["pincode"] = "Pincode cannot be empty";
-    } 
+    }
     if (formData.pincode.length !== 6) {
       formIsValid = false;
       errors["pincode"] = "Enter a valid 6 digit pincode";
@@ -172,7 +135,7 @@ function RegistrationForm(props) {
   return (
     <div>
       <h3>Enter your details</h3>
-      <form>
+      <div className="signUp-form">
         <div className="form-input">
           <label htmlFor="guideId" className="required-field">
             Guide ID{" "}
@@ -340,27 +303,28 @@ function RegistrationForm(props) {
           <input type="checkbox" name="" id="" />
           <p>By continuing, i agree to the terms of use & privacy policy.</p>
         </div>
+
         <button
           onClick={() => {
-            if(validateForm()){
-            signUp();
+            if (validateForm()) {
+              signUp();
             }
           }}
         >
           Register
         </button>
-      </form>
 
-      <p className="loginsignup-login">
-        Already have an account?{" "}
-        <span
-          onClick={() => {
-            props.setState("Login");
-          }}
-        >
-          Login here
-        </span>
-      </p>
+        <p className="loginsignup-login">
+          Already have an account?{" "}
+          <span
+            onClick={() => {
+              props.setState("Login");
+            }}
+          >
+            Login here
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
