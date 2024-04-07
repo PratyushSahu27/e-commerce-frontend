@@ -138,7 +138,7 @@ function RegistrationForm(props) {
     }
 
     if(!tncCheckbox){
-      formIsValid = false;
+      // formIsValid = false;
       errors["termsAndConditions"] = "Terms and conditions should be accepted"
     }
     setErrors(errors);
