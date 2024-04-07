@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./RegistrationForm.css";
 
 function RegistrationForm(props) {
@@ -61,10 +61,11 @@ function RegistrationForm(props) {
     });
   };
 
-  const signup = async () => {
+  const signUp = async () => {
     let dataObj;
+    console.log('Signup called!')
     if (validateForm()) {
-      await fetch("http://localhost:8080/signup", {
+      await fetch("http://162.240.173.162:8080/signup", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -86,25 +87,28 @@ function RegistrationForm(props) {
       }
       console.log("Form submitted:", formData);
     }
+    else{
+      console.log('Form submission invalid')
+    }
   };
-
 
   const validateForm = () => {
     let errors = {};
     let formIsValid = true;
 
     if (!formData.guideId) {
-        formIsValid = false;
-        errors["guideId"] = "Guide ID cannot be empty";
+      formIsValid = false;
+      errors["guideId"] = "Guide ID cannot be empty";
     }
 
     if (!formData.phoneNumber) {
-        formIsValid = false;
-        errors["phoneNumber"] = "Phone Number cannot be empty";
-    }
-    else if (formData.phoneNumber.length !== 10) {
-        formIsValid = false;
-        errors["phoneNumber"] = "Enter a valid 10 digit phone number";
+      formIsValid = false;
+      errors["phoneNumber"] = "Phone Number cannot be empty";
+    } 
+    
+    if (formData.phoneNumber.length !== 10) {
+      formIsValid = false;
+      errors["phoneNumber"] = "Enter a valid 10 digit phone number";
     }
 
     if (!formData.fullName) {
@@ -115,7 +119,9 @@ function RegistrationForm(props) {
     if (!formData.email) {
       formIsValid = false;
       errors["email"] = "Email cannot be empty";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } 
+    
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
       formIsValid = false;
       errors["email"] = "Please enter a valid email address";
     }
@@ -123,14 +129,16 @@ function RegistrationForm(props) {
     if (!formData.password) {
       formIsValid = false;
       errors["password"] = "Password cannot be empty";
-    } else if (formData.password.length < 6) {
+    } 
+    
+    if (formData.password.length < 6) {
       formIsValid = false;
       errors["password"] = "Password must be at least 6 characters long";
     }
 
     if (formData.retypePassword !== formData.password) {
-        formIsValid = false;
-        errors["retypePassword"] = "Both passwords do not match!";
+      formIsValid = false;
+      errors["retypePassword"] = "Both passwords do not match!";
     }
 
     if (!formData.state) {
@@ -139,22 +147,22 @@ function RegistrationForm(props) {
     }
 
     if (!formData.city) {
-        formIsValid = false;
-        errors["city"] = "Please enter city name";
+      formIsValid = false;
+      errors["city"] = "Please enter city name";
     }
 
     if (!formData.address) {
-    formIsValid = false;
-    errors["address"] = "Address field cannot be empty";
+      formIsValid = false;
+      errors["address"] = "Address field cannot be empty";
     }
 
     if (!formData.pincode) {
-        formIsValid = false;
-        errors["pincode"] = "Pincode cannot be empty";
-    }
-    else if (formData.pincode.length !== 10) {
-        formIsValid = false;
-        errors["pincode"] = "Enter a valid 6 digit pincode";
+      formIsValid = false;
+      errors["pincode"] = "Pincode cannot be empty";
+    } 
+    if (formData.pincode.length !== 6) {
+      formIsValid = false;
+      errors["pincode"] = "Enter a valid 6 digit pincode";
     }
 
     setErrors(errors);
@@ -164,7 +172,7 @@ function RegistrationForm(props) {
   return (
     <div>
       <h3>Enter your details</h3>
-      <form onSubmit={signup}>
+      <form>
         <div className="form-input">
           <label htmlFor="guideId" className="required-field">
             Guide ID{" "}
@@ -315,7 +323,7 @@ function RegistrationForm(props) {
           <label htmlFor="pincode" className="required-field">
             Pincode{" "}
           </label>
-          
+
           <div className="error">{errors.pincode}</div>
           <input
             className="loginsignup-field"
@@ -324,6 +332,7 @@ function RegistrationForm(props) {
             name="pincode"
             value={formData.pincode}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -331,7 +340,15 @@ function RegistrationForm(props) {
           <input type="checkbox" name="" id="" />
           <p>By continuing, i agree to the terms of use & privacy policy.</p>
         </div>
-        <button onClick={() => {signup()}}>Register</button>
+        <button
+          onClick={() => {
+            if(validateForm()){
+            signUp();
+            }
+          }}
+        >
+          Register
+        </button>
       </form>
 
       <p className="loginsignup-login">

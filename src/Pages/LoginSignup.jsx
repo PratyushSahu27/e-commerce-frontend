@@ -16,7 +16,7 @@ const LoginSignup = () => {
 
   const login = async () => {
     let dataObj;
-    await fetch("http://localhost:8080/login", {
+    await fetch("http://162.240.173.162:8080/login", {
       method: "POST",
       headers: {
         Accept: "application/form-data",
