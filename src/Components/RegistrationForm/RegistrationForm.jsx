@@ -52,7 +52,7 @@ function RegistrationForm(props) {
 
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
-        alert("Account successfully created!");
+        alert("Account successfully created! Your SM ID is : " + dataObj.newSmId);
         window.location.replace("/");
       } else {
         alert(dataObj.errors);
@@ -155,7 +155,7 @@ function RegistrationForm(props) {
           </label>
           <input
             className="loginsignup-field"
-            type="number"
+            type="text"
             id="guideId"
             name="guideId"
             value={formData.guideId}
