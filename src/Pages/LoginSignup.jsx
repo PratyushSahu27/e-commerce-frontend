@@ -5,8 +5,7 @@ import RegistrationForm from "../Components/RegistrationForm/RegistrationForm";
 const LoginSignup = () => {
   const [state, setState] = useState("Login");
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
+    smId: "",
     password: "",
   });
 
@@ -45,10 +44,10 @@ const LoginSignup = () => {
           <>
             <div className="loginsignup-fields">
               <input
-                type="email"
-                placeholder="Email address"
-                name="email"
-                value={formData.email}
+                type="text"
+                placeholder="SM ID"
+                name="smId"
+                value={formData.smId}
                 onChange={changeHandler}
               />
               <input
