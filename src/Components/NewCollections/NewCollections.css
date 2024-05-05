@@ -4,14 +4,16 @@
     align-items: center;
     gap: 5px;
    margin-bottom: 100px;
+   background-color: rgb(255, 244, 230);
 }
 .new-collections h1{
-    color: #171717;
-    font-size: 40px;
+    color: #8f8f8f;
+    font-size: 2em;
     font-weight: 600;
+    margin-top: 2em;
 }
 .new-collections hr {
-    width: 150px;
+    width: 350px;
     height: 4px;
     border-radius: 10px;
     background: #252525;
