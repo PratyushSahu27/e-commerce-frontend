@@ -1,9 +1,9 @@
 .hero{
-    min-height: 100vh;
+    min-height: 50vh;
     background:  linear-gradient(180deg, #fde1ff, #e1ffea22 60%);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 9%;
 }
 .hero-left{
@@ -11,12 +11,12 @@
 }
 .hero-left h2{
     color: #090909;
-    font-size: 24px;
+    font-size: 1.6em;
 }
 
 .hero-left p{
     color: #171717;
-    font-size: 50px;   
+    font-size: 2em;   
     font-weight: 700;
 }
 .hero-hand-icon{
@@ -46,9 +46,9 @@
     width: 18px;
 }
 
-.hero-right img{
+/* .hero-right img{
     width: 450px;
-}
+} */
 
 @media(max-width:1200px){
     
@@ -56,7 +56,7 @@
         padding: 10px 6%;
     }
     .hero-left p{
-        font-size: 70px;
+        font-size: 5em;
     }
     .hero-right img{
         width: 400px;
@@ -66,7 +66,7 @@
 @media(max-width:900px){
    
     .hero-left p{
-        font-size: 45px;
+        font-size: 4.5em;
     }
     .hero-right img{
         width: 350px;
@@ -78,7 +78,7 @@
     padding: 0 10%;
    }
     .hero-left p{
-        font-size: 55px;
+        font-size: 2em;
     }
     .hero-right{
         display: none;
@@ -87,7 +87,7 @@
         line-height: 1.2;
     }
     .hero-left h2{
-        margin-bottom: 20px;
+        margin-bottom: 2em;
     }
 
     .hero-latest-btn{
@@ -102,6 +102,6 @@
 
 .shoora {
     position: absolute;
-    width: 25px;
+    width: 1em;
     padding: 0 10px;
 }

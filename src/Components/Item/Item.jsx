@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 const Item = (props) => {
   return (
     <div className="item">
-      {/* <Link to={`/product/${props.id}`} style={{ textDecoration: "none" }}> */}
+      <Link to={`/product/${props.id}`} style={{ textDecoration: "none" }}>
         <img onClick={window.scrollTo(0, 0)} src={props.image} alt="products" />
-      {/* </Link> */}
+      </Link>
       <p>{props.name}</p>
       <div className="item-caption">
         <div className="item-prices">

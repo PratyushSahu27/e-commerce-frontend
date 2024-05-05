@@ -17,13 +17,13 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-fetch('http://162.240.173.162:8080/allproducts') 
+fetch('http://localhost:8080/allproducts') 
 .then((res) => res.json()) 
 .then((data) => setProducts(data))
 
 if(localStorage.getItem("auth-token"))
 {
-      fetch('http://162.240.173.162:8080/getcart', {
+      fetch('http://localhost:8080/getcart', {
 method: 'POST',
 headers: {
 Accept:'application/form-data',
@@ -63,7 +63,7 @@ body: JSON.stringify(),
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
     if(localStorage.getItem("auth-token"))
     {
-      fetch('http://162.240.173.162:8080/addtocart', {
+      fetch('http://localhost:8080/addtocart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',
@@ -81,7 +81,7 @@ body: JSON.stringify(),
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
     if(localStorage.getItem("auth-token"))
     {
-      fetch('http://162.240.173.162:8080/removefromcart', {
+      fetch('http://localhost:8080/removefromcart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',

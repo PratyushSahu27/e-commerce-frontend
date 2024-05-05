@@ -14,9 +14,9 @@ const ProductDisplay = (props) => {
       <div className="productdisplay-left">
         <div className="productdisplay-img-list">
           <img src={product.image} alt="img" />
+          {/* <img src={product.image} alt="img" />
           <img src={product.image} alt="img" />
-          <img src={product.image} alt="img" />
-          <img src={product.image} alt="img" />
+          <img src={product.image} alt="img" /> */}
         </div>
         <div className="productdisplay-img">
           <img className="productdisplay-main-img" src={product.image} alt="img" />
@@ -47,8 +47,6 @@ const ProductDisplay = (props) => {
           </div>
         </div>
         <button onClick={()=>{addToCart(product.id)}}>ADD TO CART</button>
-        <p className="productdisplay-right-category"><span>Category :</span> Women, T-shirt, Crop Top</p>
-        <p className="productdisplay-right-category"><span>Tags :</span> Modern, Latest</p>
       </div>
     </div>
   );
