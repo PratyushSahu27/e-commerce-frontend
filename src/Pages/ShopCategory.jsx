@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 import grocery from '../Components/Assets/grocery.png'
 
 const ShopCategory = (props) => {
-
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   const [allproducts, setAllProducts] = useState([]);
 
   const fetchInfo = () => { 
-    fetch('http://162.240.173.162:8080/allproducts') 
+    fetch(serverIp + '/allproducts') 
             .then((res) => res.json()) 
             .then((data) => setAllProducts(data))
     }

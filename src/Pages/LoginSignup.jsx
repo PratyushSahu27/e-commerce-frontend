@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./CSS/LoginSignup.css";
 import RegistrationForm from "../Components/RegistrationForm/RegistrationForm";
+import { ShopContext } from "../Context/ShopContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
   const [state, setState] = useState("Login");
+  const {addAllToCart, setUserid} = useContext(ShopContext);
+  const serverIp = process.env.REACT_APP_SERVER_IP;
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     smId: "",
     password: "",
@@ -11,11 +16,11 @@ const LoginSignup = () => {
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  };  
 
   const login = async () => {
     let dataObj;
-    await fetch("http://162.240.173.162:8080/login", {
+    await fetch(serverIp + "/login", {
       method: "POST",
       headers: {
         Accept: "application/form-data",
@@ -30,7 +35,7 @@ const LoginSignup = () => {
     console.log(dataObj);
     if (dataObj.success) {
       localStorage.setItem("auth-token", dataObj.token);
-      window.location.replace("/");
+      addAllToCart();
     } else {
       alert(dataObj.errors);
     }

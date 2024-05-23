@@ -39,13 +39,13 @@ const ProductDisplay = (props) => {
         <div className="productdisplay-right-description">
           Best Masalas
         </div>
-        <div className="productdisplay-right-size">
+        {/* <div className="productdisplay-right-size">
           <h1>Select Size</h1>
           <div className="productdisplay-right-sizes">
             <div>100gm</div>
             <div>250gm</div>
           </div>
-        </div>
+        </div> */}
         <button onClick={()=>{addToCart(product.id)}}>ADD TO CART</button>
       </div>
     </div>

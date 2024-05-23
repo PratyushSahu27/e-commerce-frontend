@@ -1,0 +1,36 @@
+.my-team-outer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 3rem 6rem;
+    gap: 1rem;
+    .user-information-block {
+        display: flex;
+        background-color: black;
+        color: beige;
+        height: 2rem;
+        align-items: center;
+        justify-content: space-evenly;
+        padding: 2rem;
+        border-radius: 0.4rem;
+    }
+
+    h2 {
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        margin: 1rem 0;
+    }
+}
+
+@media(max-width:1024px) {
+    .my-team-outer-container {
+        margin: 1rem 2rem;
+        gap: 1rem;  
+
+        .user-information-block {
+            font-size: 1rem;
+            flex-direction: column;
+            height: auto;
+            gap: 0.5rem;
+        }
+    }
+}

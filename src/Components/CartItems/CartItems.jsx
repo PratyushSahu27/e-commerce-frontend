@@ -2,10 +2,20 @@ import React, { useContext } from "react";
 import "./CartItems.css";
 import cross_icon from "../Assets/cart_cross_icon.png";
 import { ShopContext } from "../../Context/ShopContext";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const CartItems = () => {
   const {products} = useContext(ShopContext);
   const {cartItems,removeFromCart,getTotalCartAmount} = useContext(ShopContext);
+  const navigate = useNavigate();
+
+  const checkout = () => {
+    if(localStorage.getItem("auth-token")) {
+      navigate('/checkout');
+    } else {
+      navigate('/login');
+    }
+  }
 
   return (
     <div className="cartitems">
@@ -22,13 +32,13 @@ const CartItems = () => {
 
         if(cartItems[e.id]>0)
         {
-          return  <div>
+          return  <div key={e.id}>
                     <div className="cartitems-format-main cartitems-format">
                       <img className="cartitems-product-icon" src={e.image} alt="" />
                       <p cartitems-product-title>{e.name}</p>
-                      <p>${e.shoora_price}</p>
+                      <p>&#8377;{e.shoora_price}</p>
                       <button className="cartitems-quantity">{cartItems[e.id]}</button>
-                      <p>${e.shoora_price*cartItems[e.id]}</p>
+                      <p>&#8377;{e.shoora_price*cartItems[e.id]}</p>
                       <img onClick={()=>{removeFromCart(e.id)}} className="cartitems-remove-icon" src={cross_icon} alt="" />
                     </div>
                      <hr />
@@ -56,7 +66,7 @@ const CartItems = () => {
               <h3>&#8377;{getTotalCartAmount()}</h3>
             </div>
           </div>
-          <button>PROCEED TO CHECKOUT</button>
+          <button onClick={() => checkout()}>PROCEED TO CHECKOUT</button>
         </div>
         <div className="cartitems-promocode">
           <p>If you have a promo code, Enter it here</p>

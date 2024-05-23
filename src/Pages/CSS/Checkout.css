@@ -1,0 +1,17 @@
+.checkout-outer-container {
+    /* height: 75vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 3rem 6rem;
+
+    button {
+        background-color: #ff5a5a;
+        margin-bottom: rem;
+        height: 2.8rem;
+        width: 8rem;
+        border: none;
+        color: #ffffff;
+    }
+
+}

@@ -6,15 +6,15 @@ import NewCollections from '../Components/NewCollections/NewCollections'
 import NewsLetter from '../Components/NewsLetter/NewsLetter'
 
 const Shop = () => {
-
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   const [popular, setPopular] = useState([]);
   const [newcollection, setNewCollection] = useState([]);
 
   const fetchInfo = () => { 
-    fetch('http://162.240.173.162:8080/popularinwomen') 
+    fetch(serverIp + '/popularinwomen') 
             .then((res) => res.json()) 
             .then((data) => setPopular(data))
-    fetch('http://162.240.173.162:8080/newcollections' )
+    fetch(serverIp + '/newcollections' )
             .then((res) => res.json()) 
             .then((data) => setNewCollection(data))
     }

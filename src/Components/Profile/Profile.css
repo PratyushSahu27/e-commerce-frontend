@@ -1,0 +1,40 @@
+.profile-outer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 3rem 6rem;
+
+    h2 {
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        margin: 1rem 0;
+    }
+
+    .profile-detail {
+        width: 40rem;
+        display: flex;
+        padding: 0.6rem 0;
+        justify-content: space-between;
+
+        .profile-detail-key {
+            width: 20rem
+        }
+        .profile-detail-value {
+            width: 20rem
+        }
+    }
+}
+
+@media(max-width:1024px) {
+    .profile-outer-container {
+        margin: 1rem 2rem;
+
+        h2 {
+            font-size: 1rem;
+        }
+
+        .profile-detail {
+            width: 20rem;
+            font-size: 0.6rem;
+        }
+    }
+}

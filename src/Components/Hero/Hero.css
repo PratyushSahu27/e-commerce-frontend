@@ -1,5 +1,5 @@
 .hero{
-    min-height: 50vh;
+    min-height: 18vh;
     background:  linear-gradient(180deg, #fde1ff, #e1ffea22 60%);
     display: flex;
     align-items: center;
@@ -75,10 +75,10 @@
 }
 @media(max-width:700px){
    .hero{
-    padding: 0 10%;
+    padding: 0 8%;
    }
     .hero-left p{
-        font-size: 2em;
+        font-size: 1.5em;
     }
     .hero-right{
         display: none;
@@ -87,7 +87,8 @@
         line-height: 1.2;
     }
     .hero-left h2{
-        margin-bottom: 2em;
+        margin-bottom: 0.3em;
+        font-size: 1.5rem;
     }
 
     .hero-latest-btn{

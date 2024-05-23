@@ -3,6 +3,7 @@ import "./RegistrationForm.css";
 import { indianStates } from "../../Utils/signup.util";
 
 function RegistrationForm(props) {
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   // The registration form state
   const [formData, setFormData] = useState({
     guideId: "",
@@ -37,7 +38,7 @@ function RegistrationForm(props) {
     let dataObj;
     console.log("Signup called!");
     if (validateForm()) {
-      await fetch("http://162.240.173.162:8080/signup", {
+      await fetch(serverIp + "/signup", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
