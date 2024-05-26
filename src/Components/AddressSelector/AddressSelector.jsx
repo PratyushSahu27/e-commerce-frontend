@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ShopContext } from "../../Context/ShopContext";
 import "./AddressSelector.css";
 
@@ -13,8 +13,11 @@ const AddressSelector = ({ onSelectAddress }) => {
 
   const handleSelect = (address) => {
     setSelectedAddress(address);
-    onSelectAddress(address);
   };
+
+  useEffect(() => {
+    onSelectAddress(selectedAddress);
+  }, [selectedAddress]);
 
   const handleNewAddressChange = (e) => {
     const { name, value } = e.target;

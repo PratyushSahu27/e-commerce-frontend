@@ -8,7 +8,7 @@ const ShopContextProvider = (props) => {
 
   const getDefaultCart = () => {
     let cart = {};
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 500; i++) {
       cart[i] = 0;
     }
     return cart;
@@ -60,13 +60,15 @@ const ShopContextProvider = (props) => {
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
+    let totalPurchaseValue = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
         let itemInfo = products.find((product) => product.id === Number(item));
         totalAmount += cartItems[item] * itemInfo.shoora_price;
+        totalPurchaseValue += cartItems[item] * itemInfo.purchase_value;
       }
     }
-    return totalAmount;
+    return {totalAmount, totalPurchaseValue};
   };
 
   const getTotalCartItems = () => {
@@ -77,6 +79,16 @@ const ShopContextProvider = (props) => {
       }
     }
     return totalItem;
+  };
+
+  const getCartProducts = () => {
+    const cartProductsList = [];
+    for (const item in cartItems) {
+      if (cartItems[item] > 0) {
+        cartProductsList.push({...(products.find((product) => product.id === Number(item))), quantity: cartItems[item]});
+      }
+    }
+    return cartProductsList;
   };
 
   const addToCart = (itemId) => {
@@ -131,15 +143,16 @@ const ShopContextProvider = (props) => {
   };
 
   const contextValue = {
-    products,
-    getTotalCartItems,
     cartItems,
-    addToCart,
-    removeFromCart,
-    getTotalCartAmount,
+    products,
+    user,
     addAllToCart,
+    addToCart,
+    getTotalCartItems,
+    getTotalCartAmount,
     getUserData,
-    user
+    getCartProducts,
+    removeFromCart
   };
   return (
     <ShopContext.Provider value={contextValue}>

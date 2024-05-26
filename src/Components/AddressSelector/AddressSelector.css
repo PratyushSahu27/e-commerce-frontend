@@ -32,3 +32,10 @@
         color: #ffffff;
     }
 }
+
+@media (max-height: 1024px) {
+    .address-selector-outer-container {
+        width: inherit;
+
+    }
+}

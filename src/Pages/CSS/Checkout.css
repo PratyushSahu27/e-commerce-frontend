@@ -1,17 +1,25 @@
 .checkout-outer-container {
-    /* height: 75vh; */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin: 3rem 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 3rem 6rem;
 
-    button {
-        background-color: #ff5a5a;
-        margin-bottom: rem;
-        height: 2.8rem;
-        width: 8rem;
-        border: none;
-        color: #ffffff;
+  button {
+    background-color: #ff5a5a;
+    margin-bottom: rem;
+    height: 2.8rem;
+    width: 8rem;
+    border: none;
+    color: #ffffff;
+    font-weight: 500;
+    &:hover {
+      background-color: #ff2c2c;
     }
+  }
+}
 
+@media (max-height: 1024px) {
+  .checkout-outer-container {
+    margin: 2rem;
+  }
 }

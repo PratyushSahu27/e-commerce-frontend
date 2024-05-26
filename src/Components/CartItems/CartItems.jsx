@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import "./CartItems.css";
 import cross_icon from "../Assets/cart_cross_icon.png";
 import { ShopContext } from "../../Context/ShopContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CartItems = () => {
   const {products} = useContext(ShopContext);
@@ -53,7 +53,7 @@ const CartItems = () => {
           <div>
             <div className="cartitems-total-item">
               <p>Subtotal</p>
-              <p>&#8377;{getTotalCartAmount()}</p>
+              <p>&#8377;{getTotalCartAmount().totalAmount}</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
@@ -62,8 +62,13 @@ const CartItems = () => {
             </div>
             <hr />
             <div className="cartitems-total-item">
+              <p>Cart Purchase Value</p>
+              <p>{getTotalCartAmount().totalPurchaseValue}</p>
+            </div>
+            <hr />
+            <div className="cartitems-total-item">
               <h3>Total</h3>
-              <h3>&#8377;{getTotalCartAmount()}</h3>
+              <h3>&#8377;{getTotalCartAmount().totalAmount}</h3>
             </div>
           </div>
           <button onClick={() => checkout()}>PROCEED TO CHECKOUT</button>

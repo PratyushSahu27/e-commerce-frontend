@@ -4,7 +4,7 @@ import TeamLevel from "../../Components/TeamLevel/TeamLevel";
 import { ShopContext } from "../../Context/ShopContext";
 
 const MyTeam = () => {
-    const serverIp = process.env.REACT_APP_SERVER_IP;
+  const serverIp = process.env.REACT_APP_SERVER_IP;
   const [team, setTeam] = useState([]);
   const { user } = useContext(ShopContext);
   const [noOfDirectJoinees, setNoOfDirectJoinees] = useState(0);
@@ -31,10 +31,8 @@ const MyTeam = () => {
           setNoOfDirectJoinees(data.directJoinees.length);
         });
     }
-    for(let i = 0; i < 8; i++) {
-        
-    }
-  }, []);
+    for (let i = 0; i < 8; i++) {}
+  }, [user]);
   return (
     <div className="my-team-outer-container">
       <h2>My Team</h2>
@@ -44,7 +42,7 @@ const MyTeam = () => {
         <p>Total Direct Joinees: {noOfDirectJoinees}</p>
         <p>Total Team Members: {teamSize}</p>
       </div>
-      <TeamLevel level="1" team={team}/>
+      <TeamLevel level="1" team={team} />
       {/* <TeamLevel level="2" /> */}
       {/* <TeamLevel level="3" /> */}
       {/* <TeamLevel level="4" /> */}

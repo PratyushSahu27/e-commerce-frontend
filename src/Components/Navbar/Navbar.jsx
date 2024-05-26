@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import { ShopContext } from "../../Context/ShopContext";
 import nav_dropdown from "../Assets/nav_dropdown.png";
@@ -9,6 +9,7 @@ import Dropdown from "../Dropdown/Dropdown";
 const Navbar = (props) => {
   let [menu, setMenu] = useState("shop");
   const { getTotalCartItems } = useContext(ShopContext);
+  const location = useLocation();
 
   const menuRef = useRef();
 
@@ -68,29 +69,8 @@ const Navbar = (props) => {
           <Link to="/" style={{ textDecoration: "none" }}>
             Shop
           </Link>
-          {menu === "shop" ? <hr /> : <></>}
+          {location.pathname === '/' ? <hr /> : <></>}
         </li>
-        <li
-          onClick={() => {
-            setMenu("mens");
-          }}
-        >
-          <Link to="/mens" style={{ textDecoration: "none" }}>
-            Grocery
-          </Link>
-          {menu === "mens" ? <hr /> : <></>}
-        </li>
-        <li
-          onClick={() => {
-            setMenu("womens");
-          }}
-        >
-          <Link to="/womens" style={{ textDecoration: "none" }}>
-            Apparels
-          </Link>
-          {menu === "womens" ? <hr /> : <></>}
-        </li>
-        {/* <li onClick={()=>{setMenu("kids")}}><Link to='/kids' style={{ textDecoration: 'none' }}>Kids</Link>{menu==="kids"?<hr/>:<></>}</li> */}
       </ul>
       <div className="nav-login-cart">
         {localStorage.getItem("auth-token") ? (
