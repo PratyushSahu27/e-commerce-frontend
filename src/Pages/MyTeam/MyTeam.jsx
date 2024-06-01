@@ -6,12 +6,13 @@ import { ShopContext } from "../../Context/ShopContext";
 const MyTeam = () => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [team, setTeam] = useState([]);
-  const { user } = useContext(ShopContext);
   const [noOfDirectJoinees, setNoOfDirectJoinees] = useState(0);
-  const teamSize = 0;
+  const [teamSize, setTeamSize] = useState(0);
+  const { user } = useContext(ShopContext);
 
   useEffect(() => {
-    if (localStorage.getItem("auth-token")) {
+    const tempTeam = [];
+    user.smId &&
       fetch(serverIp + "/getdirectjoinees", {
         method: "POST",
         headers: {
@@ -27,12 +28,53 @@ const MyTeam = () => {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          setTeam(data.directJoinees);
+          tempTeam.push(data.directJoinees);
           setNoOfDirectJoinees(data.directJoinees.length);
+          setTeamSize(data.directJoinees.length);
+        })
+        .then(() => {
+          let promise = Promise.resolve();
+          for (let i = 0; i < 8; i++) {
+            promise = promise
+              .then(() => {
+                let promises = [];
+                let newLevel = [];
+                if (tempTeam[i]?.length > 0) {
+                  promises = tempTeam[i].map(async (member) => {
+                    const response = await fetch(
+                      serverIp + "/getdirectjoinees",
+                      {
+                        method: "POST",
+                        headers: {
+                          Accept: "application/form-data",
+                          "auth-token": `${localStorage.getItem("auth-token")}`,
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          user: {
+                            smId: member.smId,
+                          },
+                        }),
+                      }
+                    );
+                    const data = await response.json();
+                    newLevel = [...newLevel, ...data.directJoinees];
+                  });
+                }
+                return Promise.all(promises).then(() => {
+                  if (newLevel.length !== 0) {
+                    tempTeam.push(newLevel);
+                  }
+                  setTeamSize((prevSize) => prevSize + newLevel.length);
+                });
+              })
+              .finally(() => {
+                setTeam(tempTeam);
+              });
+          }
         });
-    }
-    for (let i = 0; i < 8; i++) {}
-  }, [user]);
+  }, [serverIp, user]);
+
   return (
     <div className="my-team-outer-container">
       <h2>My Team</h2>
@@ -42,10 +84,10 @@ const MyTeam = () => {
         <p>Total Direct Joinees: {noOfDirectJoinees}</p>
         <p>Total Team Members: {teamSize}</p>
       </div>
-      <TeamLevel level="1" team={team} />
-      {/* <TeamLevel level="2" /> */}
-      {/* <TeamLevel level="3" /> */}
-      {/* <TeamLevel level="4" /> */}
+      {team.length > 0 &&
+        team.map((level, index) => {
+          return <TeamLevel key={index} level={index + 1} team={level} />;
+        })}
     </div>
   );
 };

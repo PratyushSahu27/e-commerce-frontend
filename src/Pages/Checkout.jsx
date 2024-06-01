@@ -7,7 +7,7 @@ import { ShopContext } from "../Context/ShopContext";
 const Checkout = () => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [selectedAddress, setSelectedAddress] = useState({});
-  const { user, getCartProducts, getTotalCartAmount } = useContext(ShopContext);
+  const { user, getCartProducts, getTotalCartAmount, getDefaultCart, setCartItems } = useContext(ShopContext);
   const navigate = useNavigate();
 
   const onSelectAddress = (address) => {
@@ -36,6 +36,7 @@ const Checkout = () => {
       .then((res) => res.json())
       .then((data) => {
         alert("Order placed successfully!");
+        setCartItems(getDefaultCart());
         navigate('/orders')
       });
   };

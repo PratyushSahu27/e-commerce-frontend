@@ -9,11 +9,10 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 const TeamMemberTable = ({ team }) => {
-  const [usersList, setUsersList] = useState([]);
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+      <Table sx={{ minWidth: 400 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell align="center">Name</TableCell>
@@ -22,7 +21,7 @@ const TeamMemberTable = ({ team }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {team.map((user) => (
+          {team.length > 0 && team.map((user) => (
             <TableRow
               key={user.smId}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
