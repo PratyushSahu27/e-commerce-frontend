@@ -1,0 +1,25 @@
+.about-outer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin: 3rem 6rem;
+  height: 70vh;
+
+  h2 {
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    margin: 1rem 0;
+  }
+
+  h3 {
+    color: rgb(246, 161, 49);
+  }
+}
+
+@media (max-width: 1024px) {
+  .about-outer-container {
+    margin: 2rem 2rem;
+    gap: 1rem;
+  }
+}

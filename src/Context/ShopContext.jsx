@@ -18,41 +18,49 @@ const ShopContextProvider = (props) => {
 
   const [user, setUser] = useState({});
 
+  function getCart() {
+    fetch(serverIp + "/getcart", {
+      method: "POST",
+      headers: {
+        Accept: "application/form-data",
+        "auth-token": `${localStorage.getItem("auth-token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setCartItems(data);
+      });
+  }
+
+  function getUser() {
+    fetch(serverIp + "/getuser", {
+      method: "POST",
+      headers: {
+        Accept: "application/form-data",
+        "auth-token": `${localStorage.getItem("auth-token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }
+
   useEffect(() => {
     fetch(serverIp + "/allproducts")
       .then((res) => res.json())
       .then((data) => setProducts(data));
 
     if (localStorage.getItem("auth-token")) {
-      fetch(serverIp + "/getcart", {
-        method: "POST",
-        headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(),
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          setCartItems(data);
-        });
-
-      fetch(serverIp + "/getuser", {
-        method: "POST",
-        headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(),
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          setUser(data);
-        });
+      getCart();
+      getUser();
     }
-  }, []);
+
+  }, [serverIp]);
 
   const getUserData = () => {
     return user;
@@ -112,7 +120,7 @@ const ShopContextProvider = (props) => {
 
   const addAllToCart = () => {
     console.log(cartItems);
-    fetch(serverIp + "/addalltocart", {
+    return fetch(serverIp + "/addalltocart", {
       method: "POST",
       headers: {
         Accept: "application/form-data",
@@ -120,7 +128,7 @@ const ShopContextProvider = (props) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ cartItems: cartItems }),
-    }).then((res) => window.location.replace("/"));
+    });
   };
 
   const removeFromCart = (itemId) => {

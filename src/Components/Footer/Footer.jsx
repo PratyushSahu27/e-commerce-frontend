@@ -1,34 +1,57 @@
-import React from 'react'
-import './Footer.css'
+import React from "react";
+import "./Footer.css";
 
-import footer_logo from '../Assets/logo_big.png'
-import instagram_icon from '../Assets/instagram_icon.png'
-import pintrest_icon from '../Assets/pintester_icon.png'
-import whatsapp_icon from '../Assets/whatsapp_icon.png'
+import footer_logo from "../Assets/logo_big.png";
+import instagram_icon from "../Assets/instagram_icon.png";
+import pintrest_icon from "../Assets/pintester_icon.png";
+import whatsapp_icon from "../Assets/whatsapp_icon.png";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className='footer'>
+    <div className="footer">
       <div className="footer-logo">
         <img src={footer_logo} alt="" />
         <p>Shoora Mall</p>
       </div>
       <ul className="footer-links">
-        <li>Company</li>
-        <li>Products</li>
-        <li>Offices</li>
-        <li>About</li>
-        <li>Contact</li>
+        {/* <li>Products</li> */}
+        <li key="about">
+          <button onClick={() => navigate("/about")}>About</button>
+        </li>
+        <li key="offices">
+          <button onClick={() => navigate("/offices")}>Contact Us</button>
+        </li>
+        <li key="contactus">
+          <button onClick={() => navigate("/T&C")}>Terms and Conditions</button>
+        </li>
+        <li key="privacy">
+          <button onClick={() => navigate("/privacy_policy")}>
+            Privacy Policy
+          </button>
+        </li>
+        <li key="refund">
+          <button onClick={() => navigate("/refund_policy")}>
+            Refund Policy
+          </button>
+        </li>
+        <li key="shipping">
+          <button onClick={() => navigate("/shipping_policy")}>
+            Shipping Policy
+          </button>
+        </li>
       </ul>
       <div className="footer-social-icons">
         <div className="footer-icons-container">
-            <img src={instagram_icon} alt="" />
+          <img src={instagram_icon} alt="" />
         </div>
+        {/* <div className="footer-icons-container">
+          <img src={pintrest_icon} alt="" />
+        </div> */}
         <div className="footer-icons-container">
-            <img src={pintrest_icon} alt="" />
-        </div>
-        <div className="footer-icons-container">
-            <img src={whatsapp_icon} alt="" />
+          <img src={whatsapp_icon} alt="" />
         </div>
       </div>
       <div className="footer-copyright">
@@ -36,7 +59,7 @@ const Footer = () => {
         <p>Copyright @ 2024 - All Right Reserved.</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

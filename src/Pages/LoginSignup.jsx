@@ -2,13 +2,11 @@ import React, { useContext, useState } from "react";
 import "./CSS/LoginSignup.css";
 import RegistrationForm from "../Components/RegistrationForm/RegistrationForm";
 import { ShopContext } from "../Context/ShopContext";
-import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
   const [state, setState] = useState("Login");
-  const {addAllToCart, setUserid} = useContext(ShopContext);
+  const {addAllToCart} = useContext(ShopContext);
   const serverIp = process.env.REACT_APP_SERVER_IP;
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     smId: "",
     password: "",
@@ -35,7 +33,7 @@ const LoginSignup = () => {
     console.log(dataObj);
     if (dataObj.success) {
       localStorage.setItem("auth-token", dataObj.token);
-      addAllToCart();
+      addAllToCart().then(() => window.location.replace("/"));
     } else {
       alert(dataObj.errors);
     }
