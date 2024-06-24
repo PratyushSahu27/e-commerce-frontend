@@ -24,7 +24,7 @@ const RefundPolicy = () => {
         have received your returned item. We will immediately notify you on the
         status of your refund after inspecting the item. If your return is
         approved, we will initiate a refund to your original method of payment.
-        You will receive the credit within a certain number of days.
+        You will receive the credit within 7 days.
       </p>
       <p>
         <h4>Late or Missing Refunds</h4>
