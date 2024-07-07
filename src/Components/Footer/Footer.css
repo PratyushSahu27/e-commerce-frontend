@@ -3,13 +3,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 25px;
-  padding-top: 20px;
+  gap: 2rem;
 }
 .footer-logo {
   display: flex;
   align-items: center;
-  gap: 15px;
 }
 .footer-logo p {
   color: #383838;
@@ -17,7 +15,7 @@
   font-weight: 700;
 }
 .footer-logo img {
-  width: 50px;
+  width: 25rem;
 }
 .footer-links {
   display: flex;
