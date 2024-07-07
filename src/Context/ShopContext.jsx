@@ -51,7 +51,7 @@ const ShopContextProvider = (props) => {
   }
 
   useEffect(() => {
-    fetch(serverIp + "/allproducts")
+    fetch(serverIp + "/getallitems")
       .then((res) => res.json())
       .then((data) => setProducts(data));
 
@@ -59,7 +59,6 @@ const ShopContextProvider = (props) => {
       getCart();
       getUser();
     }
-
   }, [serverIp]);
 
   const getUserData = () => {
@@ -76,7 +75,7 @@ const ShopContextProvider = (props) => {
         totalPurchaseValue += cartItems[item] * itemInfo.purchase_value;
       }
     }
-    return {totalAmount, totalPurchaseValue};
+    return { totalAmount, totalPurchaseValue };
   };
 
   const getTotalCartItems = () => {
@@ -93,7 +92,10 @@ const ShopContextProvider = (props) => {
     const cartProductsList = [];
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        cartProductsList.push({...(products.find((product) => product.id === Number(item))), quantity: cartItems[item]});
+        cartProductsList.push({
+          ...products.find((product) => product.id === Number(item)),
+          quantity: cartItems[item],
+        });
       }
     }
     return cartProductsList;
@@ -162,7 +164,7 @@ const ShopContextProvider = (props) => {
     getTotalCartAmount,
     getUserData,
     removeFromCart,
-    setCartItems
+    setCartItems,
   };
   return (
     <ShopContext.Provider value={contextValue}>

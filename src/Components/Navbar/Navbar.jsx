@@ -3,13 +3,24 @@ import "./Navbar.css";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import { ShopContext } from "../../Context/ShopContext";
-import nav_dropdown from "../Assets/nav_dropdown.png";
+import menu_icon from "../Assets/hamburger-menu-icon.png";
 import Dropdown from "../Dropdown/Dropdown";
+import {
+  Drawer,
+  Button,
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@mui/material";
 
 const Navbar = (props) => {
-  let [menu, setMenu] = useState("shop");
   const { getTotalCartItems } = useContext(ShopContext);
   const location = useLocation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const menuRef = useRef();
 
@@ -41,37 +52,75 @@ const Navbar = (props) => {
     e.target.classList.toggle("open");
   };
 
+  const DrawerList = (
+    <Box
+      sx={{
+        width: 250,
+        background: "#000111",
+        color: "#ffffff",
+        height: "200vh",
+      }}
+      role="presentation"
+      onClick={() => setIsDrawerOpen(false)}
+    >
+      <List>
+        {[
+          "Accessories",
+          "Appliances",
+          "Bags",
+          "Beauty",
+          "Body care",
+          "Electronics",
+          "Flat & heel",
+          "Footwear",
+          "Home",
+          "Household",
+          "Men's collection",
+          "Organic Rashan's",
+          "Kids collection",
+          "Kitchen",
+          "Rashan's",
+          "Stationary",
+          "Sajawat",
+          "Western",
+          "Women's collection",
+        ].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      {/, <Divider / >
+      (
+        <List>
+          {["All mail", "Trash", "Spam"].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </Box>
+  );
+
   return (
     <div className="nav">
-      <Link
-        to="/"
-        onClick={() => {
-          setMenu("shop");
-        }}
-        style={{ textDecoration: "none" }}
-        className="nav-logo"
-      >
-        <img src={logo} alt="logo" />
-        <p>Shoora Mall</p>
-      </Link>
-      <img
-        onClick={dropdown_toggle}
-        className="nav-dropdown"
-        src={nav_dropdown}
-        alt=""
-      />
-      <ul ref={menuRef} className="nav-menu">
-        <li
-          onClick={() => {
-            setMenu("shop");
-          }}
-        >
-          <Link to="/" style={{ textDecoration: "none" }}>
-            Shop
-          </Link>
-          {location.pathname === '/' ? <hr /> : <></>}
-        </li>
-      </ul>
+      <div className="nav-right">
+        <Button onClick={() => setIsDrawerOpen(true)}>
+          <img className="nav-dropdown" src={menu_icon} alt="" />
+        </Button>
+        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+          {DrawerList}
+        </Drawer>
+        <Link to="/" style={{ textDecoration: "none" }} className="nav-logo">
+          <img src={logo} alt="logo" />
+          <p>Shoora Mall</p>
+        </Link>
+      </div>
       <div className="nav-login-cart">
         {localStorage.getItem("auth-token") ? (
           <Dropdown items={dropdownItems}></Dropdown>
