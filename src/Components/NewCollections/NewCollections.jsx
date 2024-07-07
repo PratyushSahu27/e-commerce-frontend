@@ -1,18 +1,29 @@
-import React from 'react'
-import './NewCollections.css'
-import Item from '../Item/Item'
+import React from "react";
+import "./NewCollections.css";
+import Item from "../Item/Item";
 
-const NewCollections = (props) => {
+const NewCollections = ({ category, data }) => {
   return (
-    <div className='new-collections'>
-      <h1>Newly added products</h1>
+    <div className="new-collections">
+      <h1>{category ? category : "Newly added products"}</h1>
       <div className="collections">
-        {props.data.map((item,i)=>{
-                return <Item id={item.id} key={i} name={item.name} image={item.image}  market_retail_price={item.market_retail_price} shoora_price={item.shoora_price} purchase_value={item.purchase_value} is_available={item.available}/>
-            })}
+        {data.map((item, i) => {
+          return (
+            <Item
+              id={item.id}
+              key={i}
+              name={item.name}
+              image={item.image}
+              market_retail_price={item.market_retail_price}
+              shoora_price={item.shoora_price}
+              purchase_value={item.purchase_value}
+              is_available={item.available}
+            />
+          );
+        })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default NewCollections
+export default NewCollections;

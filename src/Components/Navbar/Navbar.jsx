@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import "./Navbar.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import { ShopContext } from "../../Context/ShopContext";
 import menu_icon from "../Assets/hamburger-menu-icon.png";
@@ -12,14 +12,11 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
-  Divider,
 } from "@mui/material";
 
-const Navbar = (props) => {
+const Navbar = ({ setCategory }) => {
   const { getTotalCartItems } = useContext(ShopContext);
-  const location = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const menuRef = useRef();
@@ -76,16 +73,16 @@ const Navbar = (props) => {
           "Home",
           "Household",
           "Men's collection",
-          "Organic Rashan's",
+          "Organic Rashan",
           "Kids collection",
           "Kitchen",
-          "Rashan's",
+          "Rashan",
           "Stationary",
           "Sajawat",
           "Western",
           "Women's collection",
-        ].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        ].map((text) => (
+          <ListItem onClick={() => setCategory(text)} key={text} disablePadding>
             <ListItemButton>
               <ListItemText primary={text} />
             </ListItemButton>

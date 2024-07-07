@@ -17,14 +17,16 @@ import TnC from "./Pages/TnC/TnC";
 import PrivacyPolicy from "./Pages/PrivacyPolicy/PrivacyPolicy.jsx";
 import RefundPolicy from "./Pages/RefundPolicy/RefundPolicy.jsx";
 import ShippingPolicy from "./Pages/ShippingPolicy/ShippingPolicy.jsx";
+import { useState } from "react";
 
 function App() {
+  const [category, setCategory] = useState();
   return (
     <div>
       <Router>
-        <Navbar />
+        <Navbar setCategory={setCategory} />
         <Routes>
-          <Route path="/" element={<Shop gender="all" />} />
+          <Route path="/" element={<Shop category={category} />} />
           <Route path="/product" element={<Product />}>
             <Route path=":productId" element={<Product />} />
           </Route>

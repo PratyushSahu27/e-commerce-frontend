@@ -2,24 +2,28 @@ import React, { useEffect, useState } from "react";
 import Hero from "../Components/Hero/Hero";
 import NewCollections from "../Components/NewCollections/NewCollections";
 
-const Shop = ({ category = null }) => {
+const Shop = ({ category }) => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [items, setItems] = useState([]);
 
   const fetchInfo = () => {
-    fetch(serverIp + `/getallitems`)
-      .then((res) => res.json())
-      .then((data) => setItems(data));
+    !category
+      ? fetch(serverIp + `/getallitems`)
+          .then((res) => res.json())
+          .then((data) => setItems(data))
+      : fetch(serverIp + `/getitems/${category}`)
+          .then((res) => res.json())
+          .then((data) => setItems(data));
   };
 
   useEffect(() => {
     fetchInfo();
-  }, []);
+  }, [category]);
 
   return (
     <div>
       <Hero />
-      <NewCollections data={items} />
+      <NewCollections category={category} data={items} />
     </div>
   );
 };
