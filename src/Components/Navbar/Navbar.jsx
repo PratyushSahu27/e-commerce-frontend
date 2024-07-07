@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
-import logo from "../Assets/logo.png";
+import logo from "../Assets/Shoora_Mall_transparent.png";
 import { ShopContext } from "../../Context/ShopContext";
 import menu_icon from "../Assets/hamburger-menu-icon.png";
 import Dropdown from "../Dropdown/Dropdown";
@@ -43,11 +43,6 @@ const Navbar = ({ setCategory }) => {
       value: "Logout",
     },
   ];
-
-  const dropdown_toggle = (e) => {
-    menuRef.current.classList.toggle("nav-menu-visible");
-    e.target.classList.toggle("open");
-  };
 
   const DrawerList = (
     <Box
@@ -115,7 +110,7 @@ const Navbar = ({ setCategory }) => {
         </Drawer>
         <Link to="/" style={{ textDecoration: "none" }} className="nav-logo">
           <img src={logo} alt="logo" />
-          <p>Shoora Mall</p>
+          {/* <p>Shoora Mall</p> */}
         </Link>
       </div>
       <div className="nav-login-cart">

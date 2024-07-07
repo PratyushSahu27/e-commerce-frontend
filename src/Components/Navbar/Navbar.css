@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 1px 3px -2px black;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   background-color: rgb(4, 5, 5);
 }
 .nav-logo {
@@ -12,7 +12,8 @@
   gap: 10px;
 }
 .nav-logo img {
-  width: 45px;
+  width: 5.3rem;
+  padding: 0;
 }
 .nav-logo p {
   color: #ffffff;
@@ -89,8 +90,7 @@
   align-items: center;
 }
 .nav-dropdown {
-  height: 2rem;
-  width: 2rem;
+  width: 1.5rem;
 }
 
 /* -------- media query---------- */
