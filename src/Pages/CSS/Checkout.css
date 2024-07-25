@@ -4,14 +4,39 @@
   justify-content: flex-start;
   margin: 3rem 6rem;
 
+  .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .back-button {
+      width: 6rem;
+      background-color: #393939;
+    }
+
+    .spacer {
+      width: 6rem;
+    }
+  }
+
+  .back-button {
+    background-color: #393939;
+  }
+
+  .buttons-container {
+    display: flex;
+    gap: 1rem;
+  }
+
   button {
     background-color: #ff5a5a;
+    border-radius: 0.8rem;
     margin-bottom: rem;
-    height: 2.8rem;
-    width: 8rem;
+    height: 2.4rem;
+    width: 9rem;
     border: none;
     color: #ffffff;
-    font-weight: 500;
+    font-weight: 650;
     &:hover {
       background-color: #ff2c2c;
     }

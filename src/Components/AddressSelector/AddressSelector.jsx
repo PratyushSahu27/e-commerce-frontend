@@ -4,11 +4,43 @@ import "./AddressSelector.css";
 
 const AddressSelector = ({ onSelectAddress }) => {
   const { getUserData } = useContext(ShopContext);
-  const user = getUserData();
-  const [addresses, setAddresses] = useState(user.addresses);
+  // const user = getUserData();
 
-  const [selectedAddress, setSelectedAddress] = useState(addresses[0]);
-  const [newAddress, setNewAddress] = useState({ name: "", details: "" });
+  const dummyUser = {
+    name: "Pratyush Sahu",
+  };
+
+  const user = dummyUser;
+  const dummyAddresses = [
+    {
+      id: 1,
+      address: "304, Moti Bunglow",
+      city: "Dewas",
+      state: "Madhya Pradesh",
+      pincode: "455001",
+      phoneNumber: "89888888888",
+    },
+    {
+      id: 2,
+      address: "MG Road",
+      city: "Indore",
+      state: "Madhya Pradesh",
+      pincode: "452001",
+      phoneNumber: "871678617",
+    },
+  ];
+  // const [addresses, setAddresses] = useState(user.addresses);
+  const [addresses, setAddresses] = useState(dummyAddresses);
+
+  const [selectedAddress, setSelectedAddress] = useState(dummyAddresses[0]);
+  const [newAddress, setNewAddress] = useState({
+    name: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+    phoneNumber: "",
+  });
   const [showForm, setShowForm] = useState(false);
 
   const handleSelect = (address) => {
@@ -17,7 +49,7 @@ const AddressSelector = ({ onSelectAddress }) => {
 
   useEffect(() => {
     onSelectAddress(selectedAddress);
-  }, [selectedAddress]);
+  }, [onSelectAddress, selectedAddress]);
 
   const handleNewAddressChange = (e) => {
     const { name, value } = e.target;
@@ -28,8 +60,16 @@ const AddressSelector = ({ onSelectAddress }) => {
   };
 
   const handleAddNewAddress = () => {
+    // TODO: Add api call to add address to DB.
     setAddresses((prev) => [...prev, { id: prev.length + 1, ...newAddress }]);
-    setNewAddress({ name: "", details: "" });
+    setNewAddress({
+      name: "",
+      address: "",
+      city: "",
+      state: "",
+      pincode: "",
+      phoneNumber: "",
+    });
     setShowForm(false);
   };
 
@@ -38,24 +78,32 @@ const AddressSelector = ({ onSelectAddress }) => {
       <h4>Select an Address</h4>
       <div className="addresses">
         {addresses &&
-          addresses.map((address) => (
-            <div key={address.id}>
-              <input
-                type="radio"
-                id={`address-${address.id}`}
-                name="address"
-                value={address.id}
-                onChange={() => handleSelect(address)}
-                checked={selectedAddress?.id === address.id}
-              />
-              <label htmlFor={`address-${address.id}`}>
-                <p>{address.address}</p>
-                <p>{address.city}, {address.state}, {address.pincode}, {user.phoneNumber}</p>
-              </label>
-            </div>
-          ))}
+          addresses.map((address) => {
+            return (
+              <>
+                <div className="address" key={address.id}>
+                  <input
+                    type="radio"
+                    id={`address-${address.id}`}
+                    name="address"
+                    value={address.id}
+                    onChange={() => handleSelect(address)}
+                    checked={selectedAddress?.id === address.id}
+                  />
+                  <label htmlFor={`address-${address.id}`}>
+                    <p>{user.name}</p>
+                    <p>{address.address}</p>
+                    <p>
+                      {address.city}, {address.state}, {address.pincode}
+                    </p>
+                    <p>Contact: {address.phoneNumber}</p>
+                  </label>
+                </div>
+              </>
+            );
+          })}
       </div>
-      {/* <button onClick={() => setShowForm(!showForm)}>Add New Address</button>
+      <button onClick={() => setShowForm(!showForm)}>Add New Address</button>
 
       {showForm && (
         <div className="add-address">
@@ -69,23 +117,49 @@ const AddressSelector = ({ onSelectAddress }) => {
           />
           <input
             type="text"
-            name="details"
-            placeholder="Details"
-            value={newAddress.details}
+            name="address"
+            placeholder="Address"
+            value={newAddress.address}
+            onChange={handleNewAddressChange}
+          />
+          <input
+            type="text"
+            name="city"
+            placeholder="City"
+            value={newAddress.city}
+            onChange={handleNewAddressChange}
+          />
+          <input
+            type="text"
+            name="state"
+            placeholder="State"
+            value={newAddress.state}
+            onChange={handleNewAddressChange}
+          />
+          <input
+            type="number"
+            name="pincode"
+            placeholder="Pincode"
+            value={newAddress.pincode}
+            onChange={handleNewAddressChange}
+          />
+          <input
+            type="number"
+            name="phoneNumber"
+            placeholder="Phone Number"
+            value={newAddress.phoneNumber}
             onChange={handleNewAddressChange}
           />
           <button onClick={handleAddNewAddress}>Save</button>
         </div>
-      )} */}
+      )}
 
-      {/* {selectedAddress && (
+      {selectedAddress && (
         <div className="selected-address">
           <h5>Selected Address</h5>
-          <p>
-            {selectedAddress.address}
-          </p>
+          <p>{selectedAddress.address}</p>
         </div>
-      )} */}
+      )}
     </div>
   );
 };

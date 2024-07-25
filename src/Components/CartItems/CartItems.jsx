@@ -1,21 +1,35 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./CartItems.css";
 import cross_icon from "../Assets/cart_cross_icon.png";
 import { ShopContext } from "../../Context/ShopContext";
 import { useNavigate } from "react-router-dom";
 
 const CartItems = () => {
-  const {products} = useContext(ShopContext);
-  const {cartItems,removeFromCart,getTotalCartAmount} = useContext(ShopContext);
+  const { products } = useContext(ShopContext);
+  const { cartItems, removeFromCart, getTotalCartAmount } =
+    useContext(ShopContext);
   const navigate = useNavigate();
+  const [isCartEmpty, setIsCartEmpty] = useState(true);
+  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 599;
 
   const checkout = () => {
-    if(localStorage.getItem("auth-token")) {
-      navigate('/checkout');
+    if (isCartEmpty) {
+      alert("Add atleast 1 item to place an order.");
+      // } else if (
+      //   getTotalCartAmount().totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
+      // ) {
+      //   alert(
+      //     `Minimum order value should ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY} to get a free delivery.`
+      //   );
+      // } else if (localStorage.getItem("auth-token")) {
     } else {
-      navigate('/login');
+      navigate("/checkout");
     }
-  }
+    // else {
+    //  alert("Login to place order.")
+    //   navigate("/login");
+    // }
+  };
 
   return (
     <div className="cartitems">
@@ -28,25 +42,49 @@ const CartItems = () => {
         <p>Remove</p>
       </div>
       <hr />
-      {products.map((e)=>{
-
-        if(cartItems[e.id]>0)
-        {
-          return  <div key={e.id}>
-                    <div className="cartitems-format-main cartitems-format">
-                      <img className="cartitems-product-icon" src={e.image} alt="" />
-                      <p cartitems-product-title>{e.name}</p>
-                      <p>&#8377;{e.shoora_price}</p>
-                      <button className="cartitems-quantity">{cartItems[e.id]}</button>
-                      <p>&#8377;{e.shoora_price*cartItems[e.id]}</p>
-                      <img onClick={()=>{removeFromCart(e.id)}} className="cartitems-remove-icon" src={cross_icon} alt="" />
-                    </div>
-                     <hr />
-                  </div>;
+      {Object.keys(cartItems).map((itemId) => {
+        if (cartItems[itemId] > 0) {
+          isCartEmpty && setIsCartEmpty(false);
+          const product = products.filter((product) => product.id == itemId)[0];
+          return (
+            <div key={itemId}>
+              <div className="cartitems-format-main cartitems-format">
+                <img
+                  className="cartitems-product-icon"
+                  src={product.image}
+                  alt=""
+                />
+                <p cartitems-product-title>{product.name}</p>
+                <p>&#8377;{product.shoora_price}</p>
+                <button className="cartitems-quantity">
+                  {cartItems[product.id]}
+                </button>
+                <p>
+                  &#8377;
+                  {Math.round(product.shoora_price * cartItems[itemId] * 100) /
+                    100}
+                </p>
+                <img
+                  onClick={() => {
+                    removeFromCart(itemId);
+                  }}
+                  className="cartitems-remove-icon"
+                  src={cross_icon}
+                  alt=""
+                />
+              </div>
+              <hr />
+            </div>
+          );
         }
         return null;
       })}
-      
+
+      {isCartEmpty && (
+        <div className="empty-cart">
+          <h3>Cart is empty.</h3>
+        </div>
+      )}
       <div className="cartitems-down">
         <div className="cartitems-total">
           <h1>Cart Totals</h1>
