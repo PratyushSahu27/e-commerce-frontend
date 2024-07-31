@@ -4,7 +4,6 @@ import Shop from "./Pages/Shop";
 import Cart from "./Pages/Cart";
 import Product from "./Pages/Product";
 import Footer from "./Components/Footer/Footer";
-import ShopCategory from "./Pages/ShopCategory";
 import LoginSignup from "./Pages/LoginSignup";
 import Profile from "./Components/Profile/Profile";
 import Checkout from "./Pages/Checkout";
@@ -18,6 +17,7 @@ import PrivacyPolicy from "./Pages/PrivacyPolicy/PrivacyPolicy.jsx";
 import RefundPolicy from "./Pages/RefundPolicy/RefundPolicy.jsx";
 import ShippingPolicy from "./Pages/ShippingPolicy/ShippingPolicy.jsx";
 import { useState } from "react";
+import PaymentHandler from "./Components/PaymentHandler/PaymentHandler";
 
 function App() {
   const [category, setCategory] = useState();
@@ -43,6 +43,7 @@ function App() {
           <Route path="/privacy_policy" element={<PrivacyPolicy />} />
           <Route path="/refund_policy" element={<RefundPolicy />} />
           <Route path="/shipping_policy" element={<ShippingPolicy />} />
+          <Route path="/paymenthandler" element={<PaymentHandler />} />
         </Routes>
         <Footer />
       </Router>

@@ -23,46 +23,12 @@ const Checkout = () => {
     getTotalCartAmount,
     getDefaultCart,
     setCartItems,
-    addAllToCart,
   } = useContext(ShopContext);
   const navigate = useNavigate();
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
 
   const onSelectAddress = (address) => {
     setSelectedAddress(address);
-  };
-
-  const paymentHandler = async () => {
-    const { totalAmount } = getTotalCartAmount();
-
-    fetch(serverIp + "/payment", {
-      method: "POST",
-      headers: {
-        Accept: "application/form-data",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: user.name,
-        merchantUserId: user.smID,
-        mobileNumber: user.phoneNumber,
-        amount: totalAmount,
-      }),
-    })
-      .then((response) => {
-        // window.location.href = response.data;
-        console.log("Nothing");
-      })
-      .catch((error) => {
-        console.log("Error making payment: ", error);
-      });
-
-    if (paymentVerification() === true) {
-      setCheckoutState(CheckoutStates.OrderConfirmation);
-    }
-  };
-
-  const paymentVerification = async () => {
-    return true;
   };
 
   const placeOrder = () => {
@@ -137,7 +103,7 @@ const Checkout = () => {
       )}
       {checkoutState === CheckoutStates.Payment && (
         <>
-          <PaymentHandler />
+          <PaymentHandler setIsPaymentSuccessful={setIsPaymentSuccessful} />
           <div className="buttons-container">
             <button
               className="back-button"
@@ -145,9 +111,6 @@ const Checkout = () => {
             >
               Back to Order Review
             </button>
-            {/* <button disabled onClick={() => placeOrder()}>
-              Confirm Order
-            </button> */}
           </div>
         </>
       )}

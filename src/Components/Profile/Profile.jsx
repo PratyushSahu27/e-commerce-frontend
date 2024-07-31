@@ -14,11 +14,11 @@ const Profile = () => {
     "Guide ID": "guideId",
     "Phone Number": "phoneNumber",
     "Total Purchase Value collected": "total_pv",
-    "Email Address": "email"
+    "Email Address": "email",
   };
   return (
     <div className="profile-outer-container">
-      <h2>Your Profile</h2>
+      <h2 className="font-extrabold">Your Profile</h2>
       {Object.keys(profileLabelToObjectKeyMap).map((key) => {
         return (
           <div className={`profile-detail profile-detail-${key}`} key={key}>

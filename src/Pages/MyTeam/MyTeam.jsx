@@ -77,7 +77,7 @@ const MyTeam = () => {
 
   return (
     <div className="my-team-outer-container">
-      <h2>My Team</h2>
+      <h2 className="font-extrabold">My Team</h2>
       <div className="user-information-block">
         <p>SM ID: {user.smId}</p>
         <p>Total Purchase Value(PV): {user.total_pv}</p>

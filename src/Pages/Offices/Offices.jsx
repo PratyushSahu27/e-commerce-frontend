@@ -5,7 +5,7 @@ import React from "react";
 const Offices = () => {
   return (
     <div className="offices-outer-container">
-      <h2>Offices</h2>
+      <h2 className="font-extrabold">Offices</h2>
       <hr />
       <div className="office-container">
         <h3>Kash Technologies</h3>

@@ -15,20 +15,18 @@ const CartItems = () => {
   const checkout = () => {
     if (isCartEmpty) {
       alert("Add atleast 1 item to place an order.");
-      // } else if (
-      //   getTotalCartAmount().totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
-      // ) {
-      //   alert(
-      //     `Minimum order value should ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY} to get a free delivery.`
-      //   );
-      // } else if (localStorage.getItem("auth-token")) {
-    } else {
+    } else if (
+      getTotalCartAmount().totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
+    ) {
+      alert(
+        `Minimum order value should ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY} to get a free delivery.`
+      );
+    } else if (localStorage.getItem("auth-token")) {
       navigate("/checkout");
+    } else {
+      alert("Login to place order.");
+      navigate("/login");
     }
-    // else {
-    //  alert("Login to place order.")
-    //   navigate("/login");
-    // }
   };
 
   return (

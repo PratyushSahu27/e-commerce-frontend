@@ -7,7 +7,7 @@
 
   .cartitems-format-main {
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 2.5fr 0.5fr 0.5fr 0.5fr;
     align-items: center;
     gap: 50px;
     padding: 20px 0px;
@@ -27,19 +27,19 @@
     width: 55px;
     height: 45px;
     border: 2px solid #240f0f;
-    background: rgb(255, 191, 0);
+    background: rgb(0, 0, 0);
   }
 
   .cancel {
     text-decoration: line-through;
   }
 
-  @media (max-width: 1280px) {
+  @media (max-width: 1024px) {
     .cartitems {
       margin: 60px 8%;
     }
     .cartitems-format-main {
-      grid-template-columns: 0.5fr 3fr 0.5fr 0.5fr 0.5fr;
+      grid-template-columns: 0.5fr 2.5fr 0.5fr 0.5fr 0.5fr;
       gap: 20px;
       padding: 15px 0px;
       font-size: 15px;

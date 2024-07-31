@@ -75,7 +75,14 @@ const ShopContextProvider = (props) => {
         totalPurchaseValue += cartItems[item] * itemInfo.purchase_value;
       }
     }
-    return { totalAmount, totalPurchaseValue };
+    return {
+      totalAmount: roundTo2Decimals(totalAmount),
+      totalPurchaseValue: roundTo2Decimals(totalPurchaseValue),
+    };
+  };
+
+  const roundTo2Decimals = (num) => {
+    return Math.round(num * 100) / 100;
   };
 
   const getTotalCartItems = () => {
