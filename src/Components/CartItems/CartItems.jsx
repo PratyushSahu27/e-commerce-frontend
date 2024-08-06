@@ -3,19 +3,21 @@ import "./CartItems.css";
 import cross_icon from "../Assets/cart_cross_icon.png";
 import { ShopContext } from "../../Context/ShopContext";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../Context/LoginContext";
 
 const CartItems = () => {
-  const { products } = useContext(ShopContext);
-  const { cartItems, removeFromCart, getTotalCartAmount } =
+  const { products, cartItems, removeFromCart, getTotalCartAmount } =
     useContext(ShopContext);
+  const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
   const [isCartEmpty, setIsCartEmpty] = useState(true);
-  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 599;
+  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 499;
 
   const checkout = () => {
     if (isCartEmpty) {
       alert("Add atleast 1 item to place an order.");
     } else if (
+      loginState === "User" &&
       getTotalCartAmount().totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
     ) {
       alert(
@@ -52,7 +54,7 @@ const CartItems = () => {
                   src={product.image}
                   alt=""
                 />
-                <p cartitems-product-title>{product.name}</p>
+                <p className="cartitems-product-title">{product.name}</p>
                 <p>&#8377;{product.shoora_price}</p>
                 <button className="cartitems-quantity">
                   {cartItems[product.id]}

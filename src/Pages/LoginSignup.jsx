@@ -1,24 +1,28 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./CSS/LoginSignup.css";
 import RegistrationForm from "../Components/RegistrationForm/RegistrationForm";
 import { ShopContext } from "../Context/ShopContext";
+import { LoginContext } from "../Context/LoginContext";
 
 const LoginSignup = () => {
   const [state, setState] = useState("Login");
-  const {addAllToCart} = useContext(ShopContext);
+  const { addAllToCart } = useContext(ShopContext);
+  const { loginState, setLoginState } = useContext(LoginContext);
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [formData, setFormData] = useState({
     smId: "",
+    branch_id: "",
     password: "",
   });
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };  
+  };
 
   const login = async () => {
+    const route = loginState === "User" ? "/login" : "/branchlogin";
     let dataObj;
-    await fetch(serverIp + "/login", {
+    await fetch(serverIp + route, {
       method: "POST",
       headers: {
         Accept: "application/form-data",
@@ -33,7 +37,9 @@ const LoginSignup = () => {
     console.log(dataObj);
     if (dataObj.success) {
       localStorage.setItem("auth-token", dataObj.token);
-      addAllToCart().then(() => window.location.replace("/"));
+      loginState === "User"
+        ? addAllToCart().then(() => window.location.replace("/"))
+        : window.location.replace("/");
     } else {
       alert(dataObj.errors);
     }
@@ -46,13 +52,23 @@ const LoginSignup = () => {
         {state === "Login" && (
           <>
             <div className="loginsignup-fields">
-              <input
-                type="text"
-                placeholder="SM ID"
-                name="smId"
-                value={formData.smId}
-                onChange={changeHandler}
-              />
+              {loginState === "User" ? (
+                <input
+                  type="text"
+                  placeholder="SM ID"
+                  name="smId"
+                  value={formData.smId}
+                  onChange={changeHandler}
+                />
+              ) : (
+                <input
+                  type="text"
+                  placeholder="Branch ID"
+                  name="branch_id"
+                  value={formData.branch_id}
+                  onChange={changeHandler}
+                />
+              )}
               <input
                 type="password"
                 placeholder="Password"
@@ -79,6 +95,26 @@ const LoginSignup = () => {
               >
                 Click here
               </span>
+            </p>
+            <p className="loginsignup-login">
+              Login as {"  "}
+              {loginState === "User" ? (
+                <span
+                  onClick={() => {
+                    setLoginState("Branch");
+                  }}
+                >
+                  Branch
+                </span>
+              ) : (
+                <span
+                  onClick={() => {
+                    setLoginState("User");
+                  }}
+                >
+                  User
+                </span>
+              )}
             </p>
           </>
         )}

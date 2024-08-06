@@ -1,13 +1,23 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ShopContext } from "../../Context/ShopContext";
 import "./AddressSelector.css";
 import { indianStates } from "../../Utils/signup.util";
+import { LoginContext } from "../../Context/LoginContext";
 
-const AddressSelector = ({ onSelectAddress }) => {
-  const { getUserData } = useContext(ShopContext);
-  const user = getUserData();
-  const [addresses, setAddresses] = useState(user.addresses);
-  const [selectedAddress, setSelectedAddress] = useState(addresses[0]);
+const AddressSelector = ({
+  onSelectAddress,
+  buyer,
+  setBuyer,
+  isBuyerValidated,
+  setIsBuyerValidated,
+}) => {
+  const { user, branch, loginState } = useContext(LoginContext);
+  const [addresses, setAddresses] = useState(
+    loginState === "User" && user.addresses
+  );
+  const serverIp = process.env.REACT_APP_SERVER_IP;
+  const [selectedAddress, setSelectedAddress] = useState(
+    addresses ? addresses[0] : ""
+  );
   const [newAddress, setNewAddress] = useState({
     name: "",
     address: "",
@@ -17,6 +27,7 @@ const AddressSelector = ({ onSelectAddress }) => {
     pincode: "",
     phoneNumber: "",
   });
+  const [buyerError, setBuyerErrors] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -26,6 +37,7 @@ const AddressSelector = ({ onSelectAddress }) => {
 
   useEffect(() => {
     onSelectAddress(selectedAddress);
+    console.log("onEffect called with address: ", selectedAddress);
   }, [onSelectAddress, selectedAddress]);
 
   // Validates the forms fields
@@ -82,6 +94,45 @@ const AddressSelector = ({ onSelectAddress }) => {
     return formIsValid;
   };
 
+  const validateBuyer = () => {
+    let error = {};
+    let isBuyerValid = true;
+    if (!buyer.smId || buyer.smId.length !== 9) {
+      error["buyer"] = "Enter valid SM ID";
+      isBuyerValid = false;
+    } else {
+      fetch(serverIp + "/getuser", {
+        method: "POST",
+        headers: {
+          Accept: "application/form-data",
+          "auth-token": `${localStorage.getItem("auth-token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ smId: buyer.smId }),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.success === true) {
+            setBuyer(data.user);
+            setIsBuyerValidated(true);
+            setAddresses(data.user.addresses);
+            setSelectedAddress(data.user.addresses[0]);
+          } else {
+            error["buyer"] = "SM ID not found";
+            isBuyerValid = false;
+            setBuyerErrors(error);
+            alert("User not found!");
+          }
+        });
+    }
+    setBuyerErrors(error);
+    return isBuyerValid;
+  };
+
+  const handleChange = (e) => {
+    setBuyer({ ...buyer, [e.target.name]: e.target.value });
+  };
+
   const handleNewAddressChange = (e) => {
     const { name, value } = e.target;
     setNewAddress((prev) => ({
@@ -109,7 +160,30 @@ const AddressSelector = ({ onSelectAddress }) => {
 
   return (
     <div className="address-selector-outer-container">
-      <h4 className="font-extrabold">Select an Address</h4>
+      {loginState === "Branch" && (
+        <div className="add-address">
+          <div className="form-field">
+            <label id="smId">Enter buyer SM ID</label>
+            <input
+              type="text"
+              name="smId"
+              placeholder="SM ID"
+              value={buyer.smId}
+              onChange={handleChange}
+            />
+            <p className="text-red-600 text-xs pl-1">{buyerError["buyer"]}</p>
+          </div>
+          <div>
+            <button onClick={() => validateBuyer()}>Validate</button>
+            {isBuyerValidated && (
+              <p className="font-black text-lg pt-4 text-teal-700">
+                SM ID Validated
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+      <h4 className="font-extrabold">{addresses && "Select an Address"}</h4>
       <div className="addresses">
         {addresses &&
           addresses.map((address, index) => {
@@ -130,16 +204,23 @@ const AddressSelector = ({ onSelectAddress }) => {
                     <p>
                       {address.city}, {address.state}, {address.pincode}
                     </p>
-                    <p>Contact: {address.phoneNumber ?? user.phoneNumber}</p>
+                    <p>
+                      Contact:{" "}
+                      {address.phoneNumber ??
+                        user.phoneNumber ??
+                        branch.address.phoneNumber}
+                    </p>
                   </label>
                 </div>
               </div>
             );
           })}
       </div>
-      <button className="text-xs" onClick={() => setShowForm(!showForm)}>
-        Add New Address
-      </button>
+      {loginState === "User" && (
+        <button className="text-xs" onClick={() => setShowForm(!showForm)}>
+          Add New Address
+        </button>
+      )}
 
       {showForm && (
         <div className="add-address">
@@ -224,13 +305,6 @@ const AddressSelector = ({ onSelectAddress }) => {
           <button onClick={handleAddNewAddress}>Save</button>
         </div>
       )}
-
-      {/* {selectedAddress && (
-        <div className="selected-address">
-          <h5>Selected Address</h5>
-          <p>{selectedAddress.address}</p>
-        </div>
-      )} */}
     </div>
   );
 };

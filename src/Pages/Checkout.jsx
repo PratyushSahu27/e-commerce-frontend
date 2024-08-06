@@ -1,10 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/Checkout.css";
 import AddressSelector from "../Components/AddressSelector/AddressSelector";
 import { ShopContext } from "../Context/ShopContext";
 import PaymentHandler from "../Components/PaymentHandler/PaymentHandler";
 import ConfirmOrder from "../Components/ConfirmOrder/ConfirmOrder";
+import { LoginContext } from "../Context/LoginContext";
+import { v4 } from "uuid";
 
 const Checkout = () => {
   const CheckoutStates = {
@@ -17,25 +19,57 @@ const Checkout = () => {
   const [checkoutState, setCheckoutState] = useState(
     CheckoutStates.AddressSelection
   );
-  const {
-    user,
-    getCartProducts,
-    getTotalCartAmount,
-    getDefaultCart,
-    setCartItems,
-  } = useContext(ShopContext);
+  const { getCartProducts, getTotalCartAmount, getDefaultCart, setCartItems } =
+    useContext(ShopContext);
   const navigate = useNavigate();
-  const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
-
+  const [isPaymentInitiated, setIsPaymentInitiated] = useState(false);
+  const { loginState, user, branch } = useContext(LoginContext);
+  const [orderId, setOrderId] = useState("");
+  const [buyer, setBuyer] = useState({
+    smId: "",
+  });
+  const [isBuyerValidated, setIsBuyerValidated] = useState(false);
   const onSelectAddress = (address) => {
     setSelectedAddress(address);
   };
+  const [paymentMode, setPaymentMode] = useState("");
+
+  useEffect(() => {
+    if (isPaymentInitiated === true) {
+      placeOrder();
+    }
+  }, [isPaymentInitiated]);
+
+  useEffect(() => {
+    setOrderId(v4());
+  }, []);
 
   const placeOrder = () => {
     const { totalAmount, totalPurchaseValue } = getTotalCartAmount();
     const orderItems = getCartProducts();
+    let data;
+    if (loginState === "User") {
+      data = { mode: "Online", smId: user.smId, branchId: "SMBKT0002" };
+    } else {
+      if (paymentMode === "PhonePe") {
+        data = {
+          mode: "Offline",
+          smId: buyer.smId,
+          branchId: branch.branch_id,
+        };
+      } else {
+        data = {
+          mode: "Offline",
+          smId: buyer.smId,
+          branchId: branch.branch_id,
+          status: "CONFIRMED",
+          transactionId: "NA",
+          transactionStatus: "OFFLINE",
+        };
+      }
+    }
 
-    fetch(serverIp + "/placeOrder", {
+    fetch(serverIp + "/placeorder", {
       method: "POST",
       headers: {
         Accept: "application/form-data",
@@ -43,28 +77,36 @@ const Checkout = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        smId: user.smId,
+        ...data,
+        orderId,
         address: selectedAddress,
         orderValue: totalAmount,
         orderPurchaseValue: totalPurchaseValue,
         orderItems,
+        // alternateContactNumber, //TODO
       }),
     })
       .then((res) => res.json())
       .then((data) => {
-        alert("Order placed successfully!");
-        const newCart = getDefaultCart();
-        setCartItems(newCart);
-        fetch(serverIp + "/setcart", {
-          method: "POST",
-          headers: {
-            Accept: "application/form-data",
-            "auth-token": `${localStorage.getItem("auth-token")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ smId: user.smId, cartItems: newCart }),
-        }).then(() => navigate("/orders"));
+        if (data.success === true) {
+          const newCart = getDefaultCart();
+          setCartItems(newCart);
+          fetch(serverIp + "/setcart", {
+            method: "POST",
+            headers: {
+              Accept: "application/form-data",
+              "auth-token": `${localStorage.getItem("auth-token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ smId: user.smId, cartItems: newCart }),
+          });
+        }
       });
+
+    if (paymentMode === "Offline") {
+      alert(`Collect ${totalAmount} from Customer in Cash`);
+      navigate("/orders");
+    }
   };
   return (
     <div className="checkout-outer-container">
@@ -77,9 +119,21 @@ const Checkout = () => {
       </div>
       {checkoutState === CheckoutStates.AddressSelection && (
         <>
-          <AddressSelector onSelectAddress={onSelectAddress} />
+          <AddressSelector
+            onSelectAddress={onSelectAddress}
+            buyer={buyer}
+            setBuyer={setBuyer}
+            isBuyerValidated={isBuyerValidated}
+            setIsBuyerValidated={setIsBuyerValidated}
+          />
           <button
-            onClick={() => setCheckoutState(CheckoutStates.OrderConfirmation)}
+            onClick={() => {
+              if (loginState === "User" || isBuyerValidated) {
+                setCheckoutState(CheckoutStates.OrderConfirmation);
+              } else {
+                alert("Enter a valid SM ID to proceed");
+              }
+            }}
           >
             Review Order
           </button>
@@ -103,7 +157,12 @@ const Checkout = () => {
       )}
       {checkoutState === CheckoutStates.Payment && (
         <>
-          <PaymentHandler setIsPaymentSuccessful={setIsPaymentSuccessful} />
+          <PaymentHandler
+            setIsPaymentInitiated={setIsPaymentInitiated}
+            orderId={orderId}
+            setPaymentMode={setPaymentMode}
+            buyer={buyer}
+          />
           <div className="buttons-container">
             <button
               className="back-button"

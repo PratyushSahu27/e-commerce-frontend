@@ -1,14 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./Orders.scss";
-import { ShopContext } from "../../Context/ShopContext";
 import Order from "../../Components/Order/Order";
+import { LoginContext } from "../../Context/LoginContext";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const { user } = useContext(ShopContext);
+  const { user, branch, loginState } = useContext(LoginContext);
   const serverIP = process.env.REACT_APP_SERVER_IP;
 
   useEffect(() => {
+    const reqBody =
+      loginState === "User"
+        ? {
+            smId: user.smId,
+          }
+        : {
+            branchId: branch.branch_id,
+          };
     fetch(`${serverIP}/getorders`, {
       method: "POST",
       headers: {
@@ -16,13 +24,11 @@ const Orders = () => {
         "auth-token": `${localStorage.getItem("auth-token")}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        smId: user.smId,
-      }),
+      body: JSON.stringify(reqBody),
     })
       .then((res) => res.json())
       .then((data) => setOrders(data.orders));
-  }, [user]);
+  }, [user, branch, loginState]);
 
   return (
     <div className="orders-outer-container">

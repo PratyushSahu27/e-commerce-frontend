@@ -3,9 +3,16 @@ import { ShopContext } from "../../Context/ShopContext";
 import "./PaymentHandler.scss";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { LoginContext } from "../../Context/LoginContext";
 
-const PaymentHandler = () => {
+const PaymentHandler = ({
+  setIsPaymentInitiated,
+  orderId,
+  setPaymentMode,
+  buyer,
+}) => {
   const queryParams = new URLSearchParams(useLocation().search);
+  const [paymentMethod, setPaymentMethod] = useState("PhonePe");
   const [paymentStatus, setPaymentStatus] = useState(queryParams.get("status"));
   const [merchantTransactionId, setMerchantTransactionId] = useState(
     queryParams.get("merchantTransactionId")
@@ -13,30 +20,45 @@ const PaymentHandler = () => {
   const [isTransactionSuccess, setIsTransactionSuccess] = useState(
     queryParams.get("success")
   );
-  const navigate = useNavigate();
+  const { loginState, user, branch } = useContext(LoginContext);
   const serverIp = process.env.REACT_APP_SERVER_IP;
-  const { user, getTotalCartAmount } = useContext(ShopContext);
+  const { getTotalCartAmount } = useContext(ShopContext);
   const MAX_TIMEOUT = 15 * 60 * 1000;
+  const navigate = useNavigate();
+  const [isPayDisabled, setIsPayDisabled] = useState(false);
 
   useEffect(() => {
     if (isTransactionSuccess && paymentStatus && merchantTransactionId) {
-      if (
-        isTransactionSuccess === true &&
-        paymentStatus === "PAYMENT_SUCCESS"
-      ) {
-        // place order
-        scheduleChecks();
-        console.log("transaction success");
+      if (paymentStatus === "PAYMENT_SUCCESS") {
+        setOrderTransactionStatus(paymentStatus);
+        console.log("IF block");
+        setTimeout(() => navigate("/orders"), 5000);
       } else if (
-        paymentStatus === "PAYMENT_DECLINED" ||
-        paymentStatus === "PAYMENT_ERROR"
+        paymentStatus === "PAYMENT_PENDING" ||
+        paymentStatus === "INTERNAL_SERVER_ERROR"
       ) {
-        console.log("Transaction failed");
-      } else {
         scheduleChecks();
+      } else {
+        setOrderTransactionStatus(paymentStatus);
+        console.log("else block");
+        setTimeout(() => navigate("/orders"), 5000);
       }
     }
   }, []);
+
+  const setOrderTransactionStatus = async (status) => {
+    fetch(serverIp + "/updateordertransactionstatus", {
+      method: "POST",
+      headers: {
+        Accept: "application/form-data",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        transactionId: merchantTransactionId,
+        status,
+      }),
+    });
+  };
 
   async function checkStatus() {
     try {
@@ -110,53 +132,121 @@ const PaymentHandler = () => {
   }
 
   const paymentHandler = async () => {
-    const { totalAmount } = getTotalCartAmount();
+    setIsPayDisabled(true);
+    setPaymentMode(paymentMethod);
+    setIsPaymentInitiated(true);
 
-    fetch(serverIp + "/payment", {
+    if (paymentMethod === "PhonePe") {
+      const { totalAmount } = getTotalCartAmount();
+      const reqBody =
+        loginState === "User"
+          ? {
+              name: user.name,
+              merchantUserId: user.smId,
+              mobileNumber: user.phoneNumber,
+              amount: totalAmount,
+            }
+          : {
+              name: buyer.name,
+              merchantUserId: buyer.smId,
+              mobileNumber: buyer.phoneNumber,
+              amount: totalAmount,
+            };
+
+      fetch(serverIp + "/payment", {
+        method: "POST",
+        headers: {
+          Accept: "application/form-data",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success === true) {
+            setOrderPaymentId(orderId, data.data.merchantTransactionId);
+            window.location.href =
+              data.data.instrumentResponse.redirectInfo.url;
+          }
+        })
+        .catch((error) => {
+          console.log("Error making payment: ", error);
+        });
+    }
+  };
+
+  const setOrderPaymentId = async (orderId, transactionId) => {
+    fetch(serverIp + "/updateordertransactionid", {
       method: "POST",
       headers: {
         Accept: "application/form-data",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: user.name,
-        merchantUserId: user.smId,
-        mobileNumber: user.phoneNumber,
-        amount: totalAmount,
+        orderId,
+        transactionId,
       }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success === true) {
-          window.location.href = data.data.instrumentResponse.redirectInfo.url;
-        }
-      })
-      .catch((error) => {
-        console.log("Error making payment: ", error);
-      });
-
-    // if (paymentVerification() === true) {
-    //   setIsPaymentSuccessful(true);
-    // }
-  };
-
-  const paymentVerification = async () => {
-    return true;
+    });
   };
 
   return (
     <div className="payment-handler-outer-container">
-      {console.log("Status: ", paymentStatus)}
       {paymentStatus ? (
-        <>
-          <p className="text-extrabold text-lg">{paymentStatus}</p>
-          <p>Checking payment status</p>
-          <p>Do not refresh or press back button</p>
-        </>
+        <div className="payment-handler-inner-container">
+          <>
+            <p className="text-extrabold text-xl">
+              <h2>Checking payment status...</h2>
+            </p>
+            <p
+              className="text-black text-lg"
+              style={{
+                color: paymentStatus === "PAYMENT_SUCCESS" ? "green" : "red",
+              }}
+            >
+              {paymentStatus}
+            </p>
+            {paymentStatus === "PAYMENT_SUCCESS" && (
+              <p>Redirecting back to application</p>
+            )}
+            <p className="pt-10 text-teal-600 font-extrabold font-md">
+              Do not refresh or press back button
+            </p>
+          </>
+        </div>
       ) : (
         <>
           <p>Select payment options</p>
-          <button onClick={() => paymentHandler()}>Pay</button>
+          <div
+            onClick={() => setPaymentMethod("PhonePe")}
+            className="payment-method flex gap-8 p-3 sm:p-3 lg:p-4 rounded-xl border border-solid border-black "
+          >
+            <input
+              type="radio"
+              name="payment-method"
+              value={paymentMethod}
+              checked={paymentMethod === "PhonePe"}
+            />
+            <label htmlFor="payment-method">
+              UPI, Debit Card, Credit Card, Netbanking (Powered by PhonePe)
+            </label>
+          </div>
+          {loginState === "Branch" && (
+            <div
+              onClick={() => setPaymentMethod("Offline")}
+              className="payment-method flex gap-8 p-3 sm:p-3 lg:p-4  rounded-xl border border-solid border-black "
+            >
+              <input
+                type="radio"
+                name="payment-method"
+                value={paymentMethod}
+                checked={paymentMethod === "Offline"}
+              />
+              <label htmlFor="payment-method">Pay Offline</label>
+            </div>
+          )}
+          <button disabled={isPayDisabled} onClick={() => paymentHandler()}>
+            Pay
+          </button>
         </>
       )}
     </div>

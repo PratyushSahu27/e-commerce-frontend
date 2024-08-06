@@ -1,11 +1,12 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { LoginContext } from "./LoginContext";
 
 export const ShopContext = createContext(null);
 
 const ShopContextProvider = (props) => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [products, setProducts] = useState([]);
-
+  const { loginState } = useContext(LoginContext);
   const getDefaultCart = () => {
     let cart = {};
     for (let i = 0; i < 500; i++) {
@@ -13,41 +14,26 @@ const ShopContextProvider = (props) => {
     }
     return cart;
   };
-
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
-  const [user, setUser] = useState({});
-
   function getCart() {
-    fetch(serverIp + "/getcart", {
-      method: "POST",
-      headers: {
-        Accept: "application/form-data",
-        "auth-token": `${localStorage.getItem("auth-token")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(),
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setCartItems(data);
-      });
-  }
-
-  function getUser() {
-    fetch(serverIp + "/getuser", {
-      method: "POST",
-      headers: {
-        Accept: "application/form-data",
-        "auth-token": `${localStorage.getItem("auth-token")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(),
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setUser(data);
-      });
+    try {
+      fetch(serverIp + "/getcart", {
+        method: "POST",
+        headers: {
+          Accept: "application/form-data",
+          "auth-token": `${localStorage.getItem("auth-token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          setCartItems(data);
+        });
+    } catch (e) {
+      console.log("Could not fetch cart");
+    }
   }
 
   useEffect(() => {
@@ -57,13 +43,8 @@ const ShopContextProvider = (props) => {
 
     if (localStorage.getItem("auth-token")) {
       getCart();
-      getUser();
     }
   }, [serverIp]);
-
-  const getUserData = () => {
-    return user;
-  };
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
@@ -110,7 +91,7 @@ const ShopContextProvider = (props) => {
 
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-    if (localStorage.getItem("auth-token")) {
+    if (localStorage.getItem("auth-token") && loginState === "User") {
       fetch(serverIp + "/addtocart", {
         method: "POST",
         headers: {
@@ -142,7 +123,7 @@ const ShopContextProvider = (props) => {
 
   const removeFromCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-    if (localStorage.getItem("auth-token")) {
+    if (localStorage.getItem("auth-token") && loginState === "User") {
       fetch(serverIp + "/removefromcart", {
         method: "POST",
         headers: {
@@ -162,14 +143,12 @@ const ShopContextProvider = (props) => {
   const contextValue = {
     cartItems,
     products,
-    user,
     addAllToCart,
     getCartProducts,
     getDefaultCart,
     addToCart,
     getTotalCartItems,
     getTotalCartAmount,
-    getUserData,
     removeFromCart,
     setCartItems,
   };

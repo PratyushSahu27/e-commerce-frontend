@@ -14,35 +14,51 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
+import { LoginContext } from "../../Context/LoginContext";
 
 const Navbar = ({ setCategory }) => {
   const { getTotalCartItems } = useContext(ShopContext);
+  const { loginState } = useContext(LoginContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const menuRef = useRef();
-
-  const dropdownItems = [
-    {
-      id: 1,
-      value: "My Profile",
-    },
-    {
-      id: 2,
-      value: "Orders",
-    },
-    {
-      id: 3,
-      value: "Addresses",
-    },
-    {
-      id: 4,
-      value: "My Team",
-    },
-    {
-      id: 0,
-      value: "Logout",
-    },
-  ];
+  const dropdownItems =
+    loginState === "User"
+      ? [
+          {
+            id: 1,
+            value: "My Profile",
+          },
+          {
+            id: 2,
+            value: "Orders",
+          },
+          {
+            id: 3,
+            value: "Addresses",
+          },
+          {
+            id: 4,
+            value: "My Team",
+          },
+          {
+            id: 0,
+            value: "Logout",
+          },
+        ]
+      : [
+          {
+            id: 1,
+            value: "My Profile",
+          },
+          {
+            id: 2,
+            value: "Orders",
+          },
+          {
+            id: 0,
+            value: "Logout",
+          },
+        ];
 
   const DrawerList = (
     <Box

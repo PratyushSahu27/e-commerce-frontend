@@ -8,9 +8,9 @@ const LoginContextProvider = (props) => {
   const [user, setUser] = useState({});
   const [branch, setBranch] = useState({});
 
-  function getUser() {
-    fetch(serverIp + "/getuser", {
-      method: "POST",
+  function getUserOrBranch() {
+    fetch(serverIp + "/getuserorbranch", {
+      method: "GET",
       headers: {
         Accept: "application/form-data",
         "auth-token": `${localStorage.getItem("auth-token")}`,
@@ -20,31 +20,21 @@ const LoginContextProvider = (props) => {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        setUser(data);
-      });
-  }
-
-  function getBranch() {
-    fetch(serverIp + "/getbranch", {
-      method: "POST",
-      headers: {
-        Accept: "application/form-data",
-        "auth-token": `${localStorage.getItem("auth-token")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(),
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setBranch(data);
+        if (data.state === "User") {
+          setUser(data.userData);
+          setLoginState(data.state);
+        } else if (data.state === "Branch") {
+          setBranch(data.userData);
+          setLoginState(data.state);
+        }
       });
   }
 
   useEffect(() => {
     if (localStorage.getItem("auth-token")) {
-      loginState === "User" ? getUser() : getBranch();
+      getUserOrBranch();
     }
-  }, [serverIp]);
+  }, [loginState]);
 
   const contextValue = {
     user,

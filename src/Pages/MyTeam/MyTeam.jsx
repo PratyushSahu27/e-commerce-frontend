@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./MyTeam.css";
 import TeamLevel from "../../Components/TeamLevel/TeamLevel";
-import { ShopContext } from "../../Context/ShopContext";
+import { LoginContext } from "../../Context/LoginContext";
 
 const MyTeam = () => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [team, setTeam] = useState([]);
   const [noOfDirectJoinees, setNoOfDirectJoinees] = useState(0);
   const [teamSize, setTeamSize] = useState(0);
-  const { user } = useContext(ShopContext);
+  const { user, loginState } = useContext(LoginContext);
 
   useEffect(() => {
     const tempTeam = [];
-    user.smId &&
+    user &&
+      user.smId &&
       fetch(serverIp + "/getdirectjoinees", {
         method: "POST",
         headers: {

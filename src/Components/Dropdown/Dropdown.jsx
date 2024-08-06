@@ -1,16 +1,24 @@
-import * as React from "react";
+import { useEffect, useContext } from "react";
 import { Menu } from "@mui/base/Menu";
 import { MenuItem, menuItemClasses } from "@mui/base/MenuItem";
 import { MenuButton } from "@mui/base/MenuButton";
 import { Dropdown } from "@mui/base/Dropdown";
 import { useTheme } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { ShopContext } from "../../Context/ShopContext";
-import "./Dropdown.css"
+import "./Dropdown.css";
+import { LoginContext } from "../../Context/LoginContext";
+import { getStringOfMaxLength } from "../../Utils/string.util";
 
 export default function MenuSimple({ title, items }) {
-  const { getUserData } = React.useContext(ShopContext);
-  const user = getUserData();
+  const { user, branch, loginState } = useContext(LoginContext);
+  const name =
+    loginState === "User"
+      ? user.name
+        ? getStringOfMaxLength(user.name)
+        : ""
+      : branch.branch_name
+      ? getStringOfMaxLength(branch.branch_name)
+      : "";
   const navigate = useNavigate();
   const createHandleMenuClick = (menuItem) => {
     switch (menuItem.id) {
@@ -36,9 +44,15 @@ export default function MenuSimple({ title, items }) {
     }
   };
 
+  // useEffect(() => {
+  //   localStorage.removeItem("auth-token");
+  //   localStorage.removeItem("smId");
+  //   window.location.replace("/");
+  // }, []);
+
   return (
     <Dropdown>
-      <MenuButton className="TriggerButtonSimple">{user.name}</MenuButton>
+      <MenuButton className="TriggerButtonSimple">{name}</MenuButton>
 
       <Menu
         className="CustomMenuSimple"
@@ -48,14 +62,15 @@ export default function MenuSimple({ title, items }) {
       >
         {items.map((item) => (
           <>
-          {item.id === 0 && <hr></hr>}
-          <MenuItem
-            className="CustomMenuSimple--item"
-            onClick={() => createHandleMenuClick(item)}
-            key={item.id}
-          >
-            {item.value}
-          </MenuItem></>
+            {item.id === 0 && <hr></hr>}
+            <MenuItem
+              className="CustomMenuSimple--item"
+              onClick={() => createHandleMenuClick(item)}
+              key={item.id}
+            >
+              {item.value}
+            </MenuItem>
+          </>
         ))}
       </Menu>
       <Styles />

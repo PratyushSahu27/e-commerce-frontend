@@ -53,7 +53,9 @@ function RegistrationForm(props) {
 
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
-        alert("Account successfully created! Your SM ID is : " + dataObj.newSmId);
+        alert(
+          "Account successfully created! Your SM ID is : " + dataObj.newSmId
+        );
         window.location.replace("/");
       } else {
         alert(dataObj.errors);
@@ -138,9 +140,9 @@ function RegistrationForm(props) {
       errors["pincode"] = "Enter a valid 6 digit pincode";
     }
 
-    if(!tncCheckbox){
-      // formIsValid = false;
-      errors["termsAndConditions"] = "Terms and conditions should be accepted"
+    if (!tncCheckbox) {
+      formIsValid = false;
+      errors["termsAndConditions"] = "Terms and conditions should be accepted";
     }
     setErrors(errors);
     return formIsValid;
@@ -322,7 +324,7 @@ function RegistrationForm(props) {
             onChange={() => setTncCheckbox(!tncCheckbox)}
           />
           <p>By continuing, i agree to the terms of use & privacy policy.</p>
-        {/* <div className="error">{errors.termsAndConditions}</div> */}
+          {/* <div className="error">{errors.termsAndConditions}</div> */}
         </div>
 
         <button
