@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import "./NewCollections.css";
 import Item from "../Item/Item";
+import { ShopContext } from "../../Context/ShopContext";
 
-const NewCollections = ({ category, data }) => {
+const NewCollections = ({ category, data, setData }) => {
+  const { products } = useContext(ShopContext);
+
   return (
     <div className="new-collections">
       <h1>{category ? category : "Newly added products"}</h1>
       <div className="collections">
-        {data.map((item, i) => {
+        {products.map((item, i) => {
           return (
             <Item
               id={item.id}
-              key={i}
+              key={item.name}
               name={item.name}
               image={item.image}
               market_retail_price={item.market_retail_price}

@@ -23,7 +23,7 @@ const Shop = ({ category }) => {
   return (
     <div>
       <Hero />
-      <NewCollections category={category} data={items} />
+      <NewCollections category={category} data={items} setData={setItems} />
     </div>
   );
 };

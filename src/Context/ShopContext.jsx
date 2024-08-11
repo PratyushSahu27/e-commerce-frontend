@@ -39,12 +39,22 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     fetch(serverIp + "/getallitems")
       .then((res) => res.json())
-      .then((data) => setProducts(data));
+      .then((data) => {
+        if (loginState === "Branch") {
+          setProducts(data);
+        } else {
+          setProducts(
+            data.filter((product) => {
+              return product.available === true;
+            })
+          );
+        }
+      });
 
     if (localStorage.getItem("auth-token")) {
       getCart();
     }
-  }, [serverIp]);
+  }, [serverIp, loginState]);
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
