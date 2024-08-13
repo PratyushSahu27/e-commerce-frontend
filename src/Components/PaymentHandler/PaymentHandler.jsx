@@ -230,7 +230,7 @@ const PaymentHandler = ({
               UPI, Debit Card, Credit Card, Netbanking (Powered by PhonePe)
             </label>
           </div>
-          {loginState === "Branch" && (
+          {/* {loginState === "Branch" && (
             <div
               onClick={() => setPaymentMethod("Offline")}
               className="payment-method flex gap-8 p-3 sm:p-3 lg:p-4  rounded-xl border border-solid border-black "
@@ -243,7 +243,7 @@ const PaymentHandler = ({
               />
               <label htmlFor="payment-method">Pay Offline</label>
             </div>
-          )}
+          )} */}
           <button disabled={isPayDisabled} onClick={() => paymentHandler()}>
             Pay
           </button>
