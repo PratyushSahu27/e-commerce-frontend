@@ -18,6 +18,7 @@ import RefundPolicy from "./Pages/RefundPolicy/RefundPolicy.jsx";
 import ShippingPolicy from "./Pages/ShippingPolicy/ShippingPolicy.jsx";
 import { useState } from "react";
 import PaymentHandler from "./Components/PaymentHandler/PaymentHandler";
+import OrderDetails from "./Components/OrderDetails/OrderDetails";
 
 function App() {
   const [category, setCategory] = useState();
@@ -44,6 +45,9 @@ function App() {
           <Route path="/refund_policy" element={<RefundPolicy />} />
           <Route path="/shipping_policy" element={<ShippingPolicy />} />
           <Route path="/paymenthandler" element={<PaymentHandler />} />
+          <Route path="order" element={<OrderDetails />}>
+            <Route path=":orderId" element={<OrderDetails />} />
+          </Route>
         </Routes>
         <Footer />
       </Router>
