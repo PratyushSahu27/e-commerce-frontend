@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import "./CartItems.css";
-import cross_icon from "../Assets/cart_cross_icon.png";
 import { ShopContext } from "../../Context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../Context/LoginContext";
+import AddToCartButton from "../AddToCartButton/AddToCartButton";
+import BackButton from "../BackButton/BackButton";
 
 const CartItems = () => {
-  const { products, cartItems, removeFromCart, getTotalCartAmount } =
-    useContext(ShopContext);
+  const { products, cartItems, getTotalCartAmount } = useContext(ShopContext);
   const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
   const [isCartEmpty, setIsCartEmpty] = useState(true);
   const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 499;
-
   const checkout = () => {
     if (isCartEmpty) {
       alert("Add atleast 1 item to place an order.");
@@ -33,13 +32,13 @@ const CartItems = () => {
 
   return (
     <div className="cartitems">
+      <BackButton />
       <div className="cartitems-format-main">
         <p>Products</p>
         <p>Title</p>
         <p>Price</p>
         <p>Quantity</p>
         <p>Total</p>
-        <p>Remove</p>
       </div>
       <hr />
       {Object.keys(cartItems).map((itemId) => {
@@ -59,19 +58,22 @@ const CartItems = () => {
                 <button className="cartitems-quantity">
                   {cartItems[product.id]}
                 </button>
-                <p>
-                  &#8377;
-                  {Math.round(product.shoora_price * cartItems[itemId] * 100) /
-                    100}
-                </p>
-                <img
-                  onClick={() => {
-                    removeFromCart(itemId);
-                  }}
-                  className="cartitems-remove-icon"
-                  src={cross_icon}
-                  alt=""
-                />
+                <div className="flex gap-2">
+                  <h3>Line Total</h3>
+                  <p>
+                    &#8377;
+                    {Math.round(
+                      product.shoora_price * cartItems[itemId] * 100
+                    ) / 100}
+                  </p>
+                </div>
+
+                <div>
+                  <AddToCartButton
+                    itemId={product.id}
+                    items={cartItems[product.id]}
+                  />
+                </div>
               </div>
               <hr />
             </div>

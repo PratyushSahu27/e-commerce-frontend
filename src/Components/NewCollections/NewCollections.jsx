@@ -14,7 +14,7 @@ const NewCollections = ({ category, data, setData }) => {
           return (
             <Item
               id={item.id}
-              key={item.name}
+              key={item.id}
               name={item.name}
               image={item.image}
               market_retail_price={item.market_retail_price}
