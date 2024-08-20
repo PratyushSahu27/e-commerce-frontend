@@ -13,8 +13,8 @@ const NewCollections = ({ category, data, setData }) => {
         {products.map((item, i) => {
           return (
             <Item
-              id={item.id}
               key={item.id}
+              id={item.id}
               name={item.name}
               image={item.image}
               market_retail_price={item.market_retail_price}
