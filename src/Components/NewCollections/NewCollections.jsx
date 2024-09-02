@@ -10,7 +10,7 @@ const NewCollections = ({ category, data, setData }) => {
     <div className="new-collections">
       <h1>{category ? category : "Newly added products"}</h1>
       <div className="collections">
-        {products.map((item, i) => {
+        {data.map((item, i) => {
           return (
             <Item
               key={item.id}

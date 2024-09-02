@@ -51,6 +51,11 @@
   .item img {
     height: 10rem;
   }
+
+  .item-prices {
+    display: flex;
+    gap: 0.3rem;
+  }
 }
 @media (max-width: 500px) {
   .item p {

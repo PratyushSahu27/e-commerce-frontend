@@ -9,7 +9,7 @@ import "./Dropdown.css";
 import { LoginContext } from "../../Context/LoginContext";
 import { getStringOfMaxLength } from "../../Utils/string.util";
 
-export default function MenuSimple({ title, items }) {
+export default function MenuSimple({ items }) {
   const { user, branch, loginState } = useContext(LoginContext);
   const name =
     loginState === "User"
