@@ -2,11 +2,11 @@ import { useState } from "react";
 import "./RegistrationForm.css";
 import { indianStates } from "../../Utils/signup.util";
 
-function RegistrationForm(props) {
+function RegistrationForm({ guideIdDefault, setState }) {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   // The registration form state
   const [formData, setFormData] = useState({
-    guideId: "",
+    guideId: guideIdDefault ? guideIdDefault : "",
     fullName: "",
     phoneNumber: "",
     email: "",
@@ -164,6 +164,7 @@ function RegistrationForm(props) {
             value={formData.guideId}
             onChange={handleChange}
             required
+            disabled={guideIdDefault ? true : false}
           />
           <div className="error">{errors.guideId}</div>
         </div>
@@ -341,7 +342,7 @@ function RegistrationForm(props) {
           Already have an account?{" "}
           <span
             onClick={() => {
-              props.setState("Login");
+              setState("Login");
             }}
           >
             Login here

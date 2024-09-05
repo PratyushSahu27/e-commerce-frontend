@@ -3,9 +3,13 @@ import "./CSS/LoginSignup.css";
 import RegistrationForm from "../Components/RegistrationForm/RegistrationForm";
 import { ShopContext } from "../Context/ShopContext";
 import { LoginContext } from "../Context/LoginContext";
+import { useLocation } from "react-router-dom";
 
-const LoginSignup = () => {
+const LoginSignup = ({ customState }) => {
   const [state, setState] = useState("Login");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const guideId = queryParams.get("guideId");
   const { addAllToCart } = useContext(ShopContext);
   const { loginState, setLoginState } = useContext(LoginContext);
   const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -14,6 +18,16 @@ const LoginSignup = () => {
     branch_id: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (customState) {
+      setState(customState);
+      if (localStorage.getItem("auth-token")) {
+        localStorage.removeItem("auth-token");
+        localStorage.removeItem("smId");
+      }
+    }
+  }, [state]);
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -117,7 +131,9 @@ const LoginSignup = () => {
             </p>
           </>
         )}
-        {state === "Sign Up" && <RegistrationForm setState={setState} />}
+        {state === "Sign Up" && (
+          <RegistrationForm setState={setState} guideIdDefault={guideId} />
+        )}
       </div>
     </div>
   );

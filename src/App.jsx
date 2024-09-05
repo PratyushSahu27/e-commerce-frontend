@@ -48,6 +48,15 @@ function App() {
           <Route path="order" element={<OrderDetails />}>
             <Route path=":orderId" element={<OrderDetails />} />
           </Route>
+          <Route
+            path="register"
+            element={<LoginSignup customState="Sign Up" />}
+          >
+            <Route
+              path=":guideId"
+              element={<LoginSignup customState="Sign Up" />}
+            />
+          </Route>
         </Routes>
         <Footer />
       </Router>
