@@ -9,7 +9,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 const TeamMemberTable = ({ team }) => {
-
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 400 }} size="small" aria-label="a dense table">
@@ -18,19 +17,22 @@ const TeamMemberTable = ({ team }) => {
             <TableCell align="center">Name</TableCell>
             <TableCell align="center">SM ID</TableCell>
             <TableCell align="center">Guide ID</TableCell>
+            <TableCell align="center">Contact No.</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {team.length > 0 && team.map((user) => (
-            <TableRow
-              key={user.smId}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="center">{user.name}</TableCell>
-              <TableCell align="center">{user.smId}</TableCell>
-              <TableCell align="center">{user.guideId}</TableCell>
-            </TableRow>
-          ))}
+          {team.length > 0 &&
+            team.map((user) => (
+              <TableRow
+                key={user.smId}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="center">{user.name}</TableCell>
+                <TableCell align="center">{user.smId}</TableCell>
+                <TableCell align="center">{user.guideId}</TableCell>
+                <TableCell align="center">{user.phoneNumber}</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
