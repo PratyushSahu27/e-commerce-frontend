@@ -19,6 +19,8 @@ import ShippingPolicy from "./Pages/ShippingPolicy/ShippingPolicy.jsx";
 import { useState } from "react";
 import PaymentHandler from "./Components/PaymentHandler/PaymentHandler";
 import OrderDetails from "./Components/OrderDetails/OrderDetails";
+import KYC from "./Components/KYC/KYC.jsx";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [category, setCategory] = useState();
@@ -57,9 +59,11 @@ function App() {
               element={<LoginSignup customState="Sign Up" />}
             />
           </Route>
+          <Route path="/kyc" element={<KYC />} />
         </Routes>
         <Footer />
       </Router>
+      <ToastContainer />
     </div>
   );
 }

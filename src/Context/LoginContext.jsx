@@ -6,6 +6,7 @@ const LoginContextProvider = (props) => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [loginState, setLoginState] = useState("User");
   const [user, setUser] = useState({});
+  const [isKycComplete, setIsKycComplete] = useState(false);
   const [branch, setBranch] = useState({});
 
   function getUserOrBranch() {
@@ -23,6 +24,20 @@ const LoginContextProvider = (props) => {
         if (data.state === "User") {
           setUser(data.userData);
           setLoginState(data.state);
+          fetch(serverIp + "/iskyccomplete", {
+            method: "POST",
+            headers: {
+              Accept: "application/form-data",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ smId: data.userData.smId }),
+          })
+            .then((resp) => resp.json())
+            .then((data) => {
+              if (data.success) {
+                setIsKycComplete(data.isKycComplete);
+              }
+            });
         } else if (data.state === "Branch") {
           setBranch(data.userData);
           setLoginState(data.state);
@@ -41,6 +56,7 @@ const LoginContextProvider = (props) => {
     branch,
     loginState,
     setLoginState,
+    isKycComplete,
   };
   return (
     <LoginContext.Provider value={contextValue}>
