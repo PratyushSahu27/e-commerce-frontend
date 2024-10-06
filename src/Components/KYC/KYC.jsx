@@ -1,12 +1,11 @@
 import BackButton from "../BackButton/BackButton";
 import "./KYC.scss";
 import React, { useContext, useState, useEffect } from "react";
-import upload_area from "../Assets/upload_area.svg";
 import { LoginContext } from "../../Context/LoginContext";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import { toastConfigs } from "../../Utils/toast.util";
-import VerifiedTick from "../../Components/VerfiedTickmark/VerifiedTickmark";
+import KycDoc from "../../Components/KycDoc/KycDoc";
 
 const KYC = () => {
   const { user } = useContext(LoginContext);
@@ -14,9 +13,11 @@ const KYC = () => {
   const [isAadhaarUpdated, setIsAadhaarUpdated] = useState(false);
   const [isPanUpdated, setIsPanUpdated] = useState(false);
   const [isChequeUpdated, setIsChequeUpdated] = useState(false);
+  const [isPhotoUpdated, setIsPhotoUpdated] = useState(false);
   const [aadhaarImage, setAadhaarImage] = useState(false);
   const [panImage, setPanImage] = useState(false);
   const [chequeImage, setChequeImage] = useState(false);
+  const [passPhoto, setPassPhoto] = useState(false);
   const [isFirstKycTry, setIsFirstKycTry] = useState(false);
 
   const [kycDetails, setKycDetails] = useState({
@@ -27,21 +28,35 @@ const KYC = () => {
         isVerified: false,
         idNumber: "",
         verifierComments: "",
+        status: "",
       },
       panDetails: {
         image: "",
         isVerified: false,
         idNumber: "",
         verifierComments: "",
+        status: "",
       },
       chequeDetails: {
         image: "",
         isVerified: false,
+        accountNumber: "",
+        bankName: "",
+        ifsCode: "",
+        verifierComments: "",
+        status: "",
+      },
+      passportPhoto: {
+        image: "",
+        isVerified: false,
         idNumber: "",
         verifierComments: "",
+        status: "",
       },
     },
   });
+
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     getKycInfo();
@@ -60,6 +75,10 @@ const KYC = () => {
       .then((data) => {
         if (data.details) {
           setKycDetails(data.details);
+          setAadhaarImage(data.details.details.aadhaarDetails.image);
+          setPanImage(data.details.details.panDetails.image);
+          setChequeImage(data.details.details.chequeDetails.image);
+          setPassPhoto(data.details.details.passportPhoto.image);
         } else {
           setIsFirstKycTry(true);
         }
@@ -87,6 +106,13 @@ const KYC = () => {
     setChequeImage(e.target.files[0]);
   };
 
+  const passPhotoHandler = (e) => {
+    if (!isFirstKycTry) {
+      setIsPhotoUpdated(true);
+    }
+    setPassPhoto(e.target.files[0]);
+  };
+
   const uploadDocument = async (idType, image) => {
     const formData = new FormData();
     formData.append("smId", user.smId);
@@ -102,21 +128,62 @@ const KYC = () => {
     return response.json();
   };
 
-  const onSendForVerification = async () => {
+  const validate = () => {
+    let errors = {};
+    let valid = true;
     if (
-      (!aadhaarImage && !kycDetails.details.aadhaarDetails.isVerified) ||
-      (!panImage && !kycDetails.details.panDetails.isVerified) ||
-      (!chequeImage && !kycDetails.details.chequeDetails.isVerified)
+      (!aadhaarImage &&
+        kycDetails.details.aadhaarDetails.status !== "VERIFY") ||
+      (!panImage && kycDetails.details.panDetails.status !== "VERIFY") ||
+      (!chequeImage && kycDetails.details.chequeDetails.status !== "VERIFY") ||
+      (!passPhoto && kycDetails.details.passportPhoto.status !== "VERIFY")
     ) {
-      alert("Upload all documents before submitting!");
-      return;
+      toast.error("Upload all documents' images before submitting!");
+      valid = false;
     }
+
+    if (!kycDetails.details.aadhaarDetails.idNumber) {
+      errors.aadhaarDetails = "Yes";
+      valid = false;
+    }
+
+    if (!kycDetails.details.panDetails.idNumber) {
+      errors.panDetails = "Yes";
+      valid = false;
+    }
+
+    if (!kycDetails.details.chequeDetails.accountNumber) {
+      errors.accountNumber = "Yes";
+      valid = false;
+    }
+
+    if (!kycDetails.details.chequeDetails.bankName) {
+      errors.bankName = "Yes";
+      valid = false;
+    }
+
+    if (!kycDetails.details.chequeDetails.ifsCode) {
+      errors.ifsCode = "Yes";
+      valid = false;
+    }
+
+    if (!valid) toast.error("Enter all details!");
+    setErrors(errors);
+
+    return valid;
+  };
+
+  const onSendForVerification = async () => {
+    if (!validate()) return;
 
     try {
       const promises = [];
 
       // Uploading Aadhar
-      if (isFirstKycTry || isAadhaarUpdated) {
+      if (
+        isFirstKycTry ||
+        (isAadhaarUpdated && typeof aadhaarImage === "object")
+      ) {
         promises.push(uploadDocument("aadhaar", aadhaarImage));
       } else {
         promises.push(
@@ -128,7 +195,7 @@ const KYC = () => {
       }
 
       // Uploading PAN Card
-      if (isFirstKycTry || isPanUpdated) {
+      if (isFirstKycTry || (isPanUpdated && typeof panImage === "object")) {
         promises.push(uploadDocument("pan", panImage));
       } else {
         promises.push(
@@ -140,7 +207,10 @@ const KYC = () => {
       }
 
       // Uploading cheque
-      if (isFirstKycTry || isChequeUpdated) {
+      if (
+        isFirstKycTry ||
+        (isChequeUpdated && typeof chequeImage === "object")
+      ) {
         promises.push(uploadDocument("cheque", chequeImage));
       } else {
         promises.push(
@@ -151,9 +221,21 @@ const KYC = () => {
         );
       }
 
+      // Uploading passport photo
+      if (isFirstKycTry || (isPhotoUpdated && typeof passPhoto === "object")) {
+        promises.push(uploadDocument("passport-photo", passPhoto));
+      } else {
+        promises.push(
+          Promise.resolve({
+            success: true,
+            image_url: kycDetails.details.passportPhoto.image,
+          })
+        );
+      }
+
       const uploadResults = await Promise.all(promises);
 
-      uploadResults.forEach((result, idx) => {
+      uploadResults.forEach((result) => {
         if (!result.success) {
           toast.error(
             "Failed uploading documents, please retry.",
@@ -188,6 +270,13 @@ const KYC = () => {
               ? kycDetails.details.chequeDetails.status
               : "VERIFY",
           },
+          passportPhoto: {
+            ...kycDetails.details.passportPhoto,
+            image: uploadResults[3].image_url, // Cheque image URL
+            status: kycDetails.details.passportPhoto.isVerified
+              ? kycDetails.details.passportPhoto.status
+              : "VERIFY",
+          },
         },
       };
 
@@ -208,6 +297,7 @@ const KYC = () => {
             setIsAadhaarUpdated(false);
             setIsChequeUpdated(false);
             setIsPanUpdated(false);
+            setIsPhotoUpdated(false);
 
             toast.success("Sent for verification", toastConfigs);
           } else {
@@ -219,6 +309,45 @@ const KYC = () => {
     }
   };
 
+  const idChangeHandler = (e, type) => {
+    switch (type) {
+      case "aadhaar":
+        setKycDetails((prev) => {
+          return {
+            ...prev,
+            details: {
+              ...prev.details,
+              aadhaarDetails: {
+                ...prev.details.aadhaarDetails,
+                idNumber: e.target.value,
+              },
+            },
+          };
+        });
+        setIsAadhaarUpdated(true);
+        break;
+
+      case "pan":
+        setKycDetails((prev) => {
+          return {
+            ...prev,
+            details: {
+              ...prev.details,
+              panDetails: {
+                ...prev.details.panDetails,
+                idNumber: e.target.value,
+              },
+            },
+          };
+        });
+        setIsPanUpdated(true);
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <div className="kyc-outer-container">
       <div className="flex w-full items-start">
@@ -226,176 +355,141 @@ const KYC = () => {
       </div>
       <h2 className="font-extrabold">Know your Customer</h2>
       <h4 className="w-full text-black text-red-700">
-        Maximum file size allowed is 5MB
+        Maximum file size allowed is 1MB
       </h4>
-      <div className="inputs w-full flex flex-col my-12 gap-4 justify-between grid grid-cols-1 md:grid-cols-3">
-        <div className="input flex flex-col gap-8">
-          <h3 className="font-semibold">Aadhar Card</h3>
-          <div className="image-input w-fit">
-            <label for="aadhaar-file-input">
-              <img
-                className="kyc-image"
-                src={
-                  !isAadhaarUpdated && kycDetails.details.aadhaarDetails.image
-                    ? kycDetails.details.aadhaarDetails.image
-                    : !aadhaarImage
-                    ? upload_area
-                    : URL.createObjectURL(aadhaarImage)
-                }
-                alt=""
-              />
+      <div className="inputs w-full flex flex-col my-12 gap-8 justify-between grid grid-cols-1 md:grid-cols-2">
+        <KycDoc
+          idName="Passport-size Photo"
+          kycDetails={kycDetails}
+          isDocUpdated={isPhotoUpdated}
+          image={passPhoto}
+          imageHandler={passPhotoHandler}
+          detailName="passportPhoto"
+          idType="photo"
+          errors={errors}
+        />
+        <KycDoc
+          idName="Aadhaar Card"
+          kycDetails={kycDetails}
+          isDocUpdated={isAadhaarUpdated}
+          image={aadhaarImage}
+          imageHandler={aadhaarImageHandler}
+          idChangeHandler={idChangeHandler}
+          detailName="aadhaarDetails"
+          idType="aadhaar"
+          errors={errors}
+        />
+        <KycDoc
+          idName="PAN Card"
+          kycDetails={kycDetails}
+          isDocUpdated={isPanUpdated}
+          image={panImage}
+          imageHandler={panImageHandler}
+          idChangeHandler={idChangeHandler}
+          detailName="panDetails"
+          idType="pan"
+          errors={errors}
+        />
+        <KycDoc
+          idName="Bank Details (Upload cancelled cheque)"
+          kycDetails={kycDetails}
+          isDocUpdated={isChequeUpdated}
+          image={chequeImage}
+          imageHandler={chequeImageHandler}
+          detailName="chequeDetails"
+          idType="cheque"
+        >
+          <div className="flex flex-col">
+            <label className="font-semibold text-sm" htmlFor="comments">
+              Bank Name
             </label>
-            {kycDetails?.details?.aadhaarDetails?.status !== "VERIFIED" &&
-              kycDetails?.details?.aadhaarDetails?.status !== "VERIFY" && (
-                <input
-                  onChange={(e) => {
-                    aadhaarImageHandler(e);
-                  }}
-                  type="file"
-                  name="aadhaar"
-                  id="aadhaar-file-input"
-                />
-              )}
+            <input
+              name="comments"
+              value={kycDetails?.details.chequeDetails?.bankName}
+              disabled={kycDetails?.details.chequeDetails?.status === "VERIFY"}
+              className={`text-gray-600 rounded text-sm w-56 border-2 ${
+                errors["bankName"] === "Yes"
+                  ? "border-red-600"
+                  : "border-grey-500"
+              }`}
+              onChange={(e) => {
+                setIsChequeUpdated(true);
+                setKycDetails((prev) => {
+                  return {
+                    ...prev,
+                    details: {
+                      ...prev.details,
+                      chequeDetails: {
+                        ...prev.details.chequeDetails,
+                        bankName: e.target.value,
+                      },
+                    },
+                  };
+                });
+              }}
+            />
           </div>
-          {kycDetails?.details?.aadhaarDetails?.status === "REJECTED" && (
-            <div>
-              <p className="text-md text-extrabold text-red-700">
-                Verification Failed
-              </p>
-              <p className="text-sm text-extrabold text-black-600">
-                Please re-upload document and send for verification
-              </p>
-              <p className="pt-4 text-sm font-semibold">
-                <bold>Verifier Comments: &nbsp;&nbsp;</bold>{" "}
-                {kycDetails?.details?.aadhaarDetails?.verifierComments}
-              </p>
-            </div>
-          )}
-          {kycDetails?.details?.aadhaarDetails?.status === "VERIFIED" && (
-            <div className="flex flex-col">
-              <VerifiedTick />
-              <h3>Verified</h3>
-            </div>
-          )}
-
-          {kycDetails?.details?.aadhaarDetails?.status === "VERIFY" && (
-            <div className="flex flex-col">
-              <h3 className="font-extrabold">Sent for verification</h3>
-            </div>
-          )}
-        </div>
-        <div className="input flex flex-col gap-8">
-          <h3 className="font-semibold">PAN Card</h3>
-          <div className="image-input w-fit">
-            <label for="pan-file-input">
-              <img
-                className="kyc-image"
-                src={
-                  !isPanUpdated && kycDetails.details.panDetails.image
-                    ? kycDetails.details.panDetails.image
-                    : !panImage
-                    ? upload_area
-                    : URL.createObjectURL(panImage)
-                }
-                alt=""
-              />
+          <div className="flex flex-col">
+            <label className="font-semibold text-sm" htmlFor="comments">
+              Account Number
             </label>
-            {kycDetails?.details?.panDetails?.status !== "VERIFIED" &&
-              kycDetails?.details?.panDetails?.status !== "VERIFY" && (
-                <input
-                  onChange={(e) => {
-                    panImageHandler(e);
-                  }}
-                  type="file"
-                  name="pan"
-                  id="pan-file-input"
-                />
-              )}
+            <input
+              name="comments"
+              value={kycDetails?.details.chequeDetails?.accountNumber}
+              disabled={kycDetails?.details.chequeDetails?.status === "VERIFY"}
+              className={`text-gray-600 rounded text-sm w-56 border-2 ${
+                errors["accountNumber"] === "Yes"
+                  ? "border-red-600"
+                  : "border-grey-500"
+              }`}
+              onChange={(e) => {
+                setIsChequeUpdated(true);
+                setKycDetails((prev) => {
+                  return {
+                    ...prev,
+                    details: {
+                      ...prev.details,
+                      chequeDetails: {
+                        ...prev.details.chequeDetails,
+                        accountNumber: e.target.value,
+                      },
+                    },
+                  };
+                });
+              }}
+            />
           </div>
-          {kycDetails?.details?.panDetails?.status === "REJECTED" && (
-            <div>
-              <p className="text-md text-extrabold text-red-700">
-                Verification Failed
-              </p>
-              <p className="text-sm text-extrabold text-black-600">
-                Please re-upload document and send for verification
-              </p>
-              <p className="pt-4 text-sm font-semibold">
-                <bold>Verifier Comments: &nbsp;&nbsp;</bold>{" "}
-                {kycDetails?.details?.panDetails?.verifierComments}
-              </p>
-            </div>
-          )}
-          {kycDetails?.details?.panDetails?.status === "VERIFIED" && (
-            <div className="flex flex-col">
-              <VerifiedTick />
-              <h3>Verified</h3>
-            </div>
-          )}
-
-          {kycDetails?.details?.panDetails?.status === "VERIFY" && (
-            <div className="flex flex-col">
-              <h3 className="font-extrabold">Sent for verification</h3>
-            </div>
-          )}
-        </div>
-        <div className="input flex flex-col gap-8">
-          <h3 className="font-semibold">
-            Bank Details (Upload cancelled cheque)
-          </h3>
-          <div className="image-input w-fit">
-            <label for="cheque-file-input">
-              <img
-                className="kyc-image"
-                src={
-                  !isChequeUpdated && kycDetails.details.chequeDetails.image
-                    ? kycDetails.details.chequeDetails.image
-                    : !chequeImage
-                    ? upload_area
-                    : URL.createObjectURL(chequeImage)
-                }
-                alt=""
-              />
+          <div className="flex flex-col">
+            <label className="font-semibold text-sm" htmlFor="comments">
+              IFS Code
             </label>
-            {kycDetails?.details?.chequeDetails?.status !== "VERIFIED" &&
-              kycDetails?.details?.chequeDetails?.status !== "VERIFY" && (
-                <input
-                  onChange={(e) => {
-                    chequeImageHandler(e);
-                  }}
-                  type="file"
-                  name="cheque"
-                  id="cheque-file-input"
-                />
-              )}
+            <input
+              name="comments"
+              value={kycDetails?.details.chequeDetails?.ifsCode}
+              disabled={kycDetails?.details.chequeDetails?.status === "VERIFY"}
+              className={`text-gray-600 rounded text-sm w-56 border-2 ${
+                errors["ifsCode"] === "Yes"
+                  ? "border-red-600"
+                  : "border-grey-500"
+              }`}
+              onChange={(e) => {
+                setIsChequeUpdated(true);
+                setKycDetails((prev) => {
+                  return {
+                    ...prev,
+                    details: {
+                      ...prev.details,
+                      chequeDetails: {
+                        ...prev.details.chequeDetails,
+                        ifsCode: e.target.value,
+                      },
+                    },
+                  };
+                });
+              }}
+            />
           </div>
-          {kycDetails?.details?.chequeDetails?.status === "REJECTED" && (
-            <div>
-              <p className="text-md text-extrabold text-red-700">
-                Verification Failed
-              </p>
-              <p className="text-sm text-extrabold text-black-600">
-                Please re-upload document and send for verification
-              </p>
-              <p className="pt-4 text-sm font-semibold">
-                <bold>Verifier Comments: &nbsp;&nbsp;</bold>{" "}
-                {kycDetails?.details?.chequeDetails?.verifierComments}
-              </p>
-            </div>
-          )}
-          {kycDetails?.details?.chequeDetails?.status === "VERIFIED" && (
-            <div className="flex flex-col">
-              <VerifiedTick />
-              <h3>Verified</h3>
-            </div>
-          )}
-
-          {kycDetails?.details?.chequeDetails?.status === "VERIFY" && (
-            <div className="flex flex-col">
-              <h3 className="font-extrabold">Sent for verification</h3>
-            </div>
-          )}
-        </div>
+        </KycDoc>
       </div>
       <Button
         variant="contained"
