@@ -19,8 +19,13 @@ const Checkout = () => {
   const [checkoutState, setCheckoutState] = useState(
     CheckoutStates.AddressSelection
   );
-  const { getCartProducts, getTotalCartAmount, getDefaultCart, setCartItems } =
-    useContext(ShopContext);
+  const {
+    getCartProducts,
+    getTotalCartAmount,
+    getDefaultCart,
+    setCartItems,
+    getDeliveryCharge,
+  } = useContext(ShopContext);
   const navigate = useNavigate();
   const [isPaymentInitiated, setIsPaymentInitiated] = useState(false);
   const { loginState, user, branch } = useContext(LoginContext);
@@ -46,6 +51,7 @@ const Checkout = () => {
 
   const placeOrder = () => {
     const { totalAmount, totalPurchaseValue } = getTotalCartAmount();
+    const deliveryCharge = getDeliveryCharge();
     const orderItems = getCartProducts();
     let data;
     if (loginState === "User") {
@@ -82,6 +88,7 @@ const Checkout = () => {
         address: selectedAddress,
         orderValue: totalAmount,
         orderPurchaseValue: totalPurchaseValue,
+        deliveryCharge: deliveryCharge,
         orderItems,
         // alternateContactNumber, //TODO
       }),

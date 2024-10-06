@@ -7,6 +7,8 @@ const ShopContextProvider = (props) => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [products, setProducts] = useState([]);
   const { loginState } = useContext(LoginContext);
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
+
   const getDefaultCart = () => {
     let cart = {};
     for (let i = 0; i < 500; i++) {
@@ -56,6 +58,14 @@ const ShopContextProvider = (props) => {
     }
   }, [serverIp, loginState]);
 
+  const updateDeliveryCharge = (charge) => {
+    setDeliveryCharge(charge);
+  };
+
+  const getDeliveryCharge = () => {
+    return deliveryCharge;
+  };
+
   const getTotalCartAmount = () => {
     let totalAmount = 0;
     let totalPurchaseValue = 0;
@@ -66,8 +76,12 @@ const ShopContextProvider = (props) => {
         totalPurchaseValue += cartItems[item] * itemInfo.purchase_value;
       }
     }
+
+    if (totalAmount < 999) {
+      setDeliveryCharge(100);
+    }
     return {
-      totalAmount: roundTo2Decimals(totalAmount),
+      totalAmount: roundTo2Decimals(totalAmount + deliveryCharge),
       totalPurchaseValue: roundTo2Decimals(totalPurchaseValue),
     };
   };
@@ -119,7 +133,6 @@ const ShopContextProvider = (props) => {
   };
 
   const addAllToCart = () => {
-    console.log(cartItems);
     return fetch(serverIp + "/addalltocart", {
       method: "POST",
       headers: {
@@ -161,6 +174,8 @@ const ShopContextProvider = (props) => {
     getTotalCartAmount,
     removeFromCart,
     setCartItems,
+    updateDeliveryCharge,
+    getDeliveryCharge,
   };
   return (
     <ShopContext.Provider value={contextValue}>

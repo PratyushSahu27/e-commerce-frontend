@@ -3,7 +3,8 @@ import { useContext } from "react";
 import { ShopContext } from "../../Context/ShopContext";
 
 const ConfirmOrder = () => {
-  const { cartItems, products, getTotalCartAmount } = useContext(ShopContext);
+  const { cartItems, products, getTotalCartAmount, getDeliveryCharge } =
+    useContext(ShopContext);
 
   return (
     <div className="confirm-order-outer-container">
@@ -49,6 +50,11 @@ const ConfirmOrder = () => {
         }
         return null;
       })}
+
+      <div className="flex justify-end text-md pb-4 gap-6 sm:px-4 md:px-4 lg:px-4 xl:px-8">
+        <p>Delivery charge</p>
+        <p>&#8377;{getDeliveryCharge()}</p>
+      </div>
 
       <div className="flex justify-end text-lg font-bold gap-6 sm:px-4 md:px-4 lg:px-4 xl:px-8">
         <p>Subtotal</p>

@@ -3,6 +3,7 @@ import "./OrderDetails.scss";
 import React, { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
 import { LoginContext } from "../../Context/LoginContext";
+import BackButton from "../../Components/BackButton/BackButton";
 
 const OrderDetails = () => {
   const location = useLocation();
@@ -116,136 +117,141 @@ const OrderDetails = () => {
   };
 
   return (
-    <div className="order-details-outer-container flex justify-center">
-      <div className="order-details">
-        <div className="order-header">
-          <h2>Order ID: {order.orderId}</h2>
-          <p>
-            Status:{"    "}
-            <span className={`status ${order.status?.toLowerCase()}`}>
-              {order.status}
-            </span>
-          </p>
-          <p>
-            Transaction Status:{" "}
-            <span
-              className={`transaction-status ${order.transactionStatus?.toLowerCase()}`}
-            >
-              {order.transactionStatus}
-            </span>
-          </p>
-        </div>
+    <div className="order-details-outer-container flex flex-col m-8">
+      <BackButton />
+      <div className="flex justify-center">
+        <div className="order-details mt-4">
+          <div className="order-header">
+            <h2>Order ID: {order.orderId}</h2>
+            <p>
+              Status:{"    "}
+              <span className={`status ${order.status?.toLowerCase()}`}>
+                {order.status}
+              </span>
+            </p>
+            <p>
+              Transaction Status:{" "}
+              <span
+                className={`transaction-status ${order.transactionStatus?.toLowerCase()}`}
+              >
+                {order.transactionStatus}
+              </span>
+            </p>
+          </div>
 
-        <div className="buyer-info">
-          <h3>Buyer Information</h3>
-          <p>
-            <strong>
-              Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </strong>{" "}
-            {order.buyer_name}
-          </p>
-          <p>
-            <strong>
-              SM
-              ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </strong>{" "}
-            {order.smId}
-          </p>
-          <p>
-            <strong>
-              Mode:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </strong>{" "}
-            {order.mode}
-          </p>
-          <p>
-            <strong>Contact:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>{" "}
-            {order.buyer_contact}
-          </p>
-        </div>
+          <div className="buyer-info">
+            <h3>Buyer Information</h3>
+            <p>
+              <strong>
+                Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </strong>{" "}
+              {order.buyer_name}
+            </p>
+            <p>
+              <strong>
+                SM
+                ID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </strong>{" "}
+              {order.smId}
+            </p>
+            <p>
+              <strong>
+                Mode:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </strong>{" "}
+              {order.mode}
+            </p>
+            <p>
+              <strong>Contact:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>{" "}
+              {order.buyer_contact}
+            </p>
+          </div>
 
-        <div className="address-info">
-          <h3>Shipping Address</h3>
-          <p>
-            <strong>Name:</strong> {order?.address?.name}
-          </p>
-          <p>
-            <strong>Address:</strong> {order?.address?.address}
-          </p>
-          <p>
-            <strong>City:</strong> {order?.address?.city}
-          </p>
-          <p>
-            <strong>State:</strong> {order?.address?.state}
-          </p>
-          <p>
-            <strong>Pincode:</strong> {order?.address?.pincode}
-          </p>
-          <p>
-            <strong>Contact:</strong> {order?.address?.phoneNumber}
-          </p>
-        </div>
+          <div className="address-info">
+            <h3>Shipping Address</h3>
+            <p>
+              <strong>Name:</strong> {order?.address?.name}
+            </p>
+            <p>
+              <strong>Address:</strong> {order?.address?.address}
+            </p>
+            <p>
+              <strong>City:</strong> {order?.address?.city}
+            </p>
+            <p>
+              <strong>State:</strong> {order?.address?.state}
+            </p>
+            <p>
+              <strong>Pincode:</strong> {order?.address?.pincode}
+            </p>
+            <p>
+              <strong>Contact:</strong> {order?.address?.phoneNumber}
+            </p>
+          </div>
 
-        <div className="order-items">
-          <h3>Order Items</h3>
-          {order.orderItems?.map((item, index) => (
-            <div className="order-item" key={index}>
-              <img src={item.image} alt={item.name} />
-              <div className="item-details">
-                <p>
-                  <strong>Name:</strong>&nbsp;&nbsp; {item.name}
-                </p>
-                <p>
-                  <strong>Category:</strong> &nbsp;&nbsp;{item.category}
-                </p>
-                <p>
-                  <strong>Quantity:</strong> {item.quantity} x &nbsp;&nbsp;
-                  {item.quantity_value} {item.quantity_unit}
-                </p>
-                <p>
-                  <strong>Price:</strong> &nbsp;&nbsp;₹{item.shoora_price}
-                </p>
-                <p>
-                  <strong>Purchase Value:</strong> &nbsp;&nbsp;
-                  {item.purchase_value}
-                </p>
+          <div className="order-items">
+            <h3>Order Items</h3>
+            {order.orderItems?.map((item, index) => (
+              <div className="order-item" key={index}>
+                <img src={item.image} alt={item.name} />
+                <div className="item-details">
+                  <p>
+                    <strong>Name:</strong>&nbsp;&nbsp; {item.name}
+                  </p>
+                  <p>
+                    <strong>Category:</strong> &nbsp;&nbsp;{item.category}
+                  </p>
+                  <p>
+                    <strong>Quantity:</strong> {item.quantity} x &nbsp;&nbsp;
+                    {item.quantity_value} {item.quantity_unit}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> &nbsp;&nbsp;₹{item.shoora_price}
+                  </p>
+                  <p>
+                    <strong>Purchase Value:</strong> &nbsp;&nbsp;
+                    {item.purchase_value}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        <div className="order-summary">
-          <h3>Order Summary</h3>
-          <p>
-            <strong>Total Order Value:</strong> &nbsp;&nbsp;₹{order.orderValue}
-          </p>
-          <p>
-            <strong>Total Purchase Value:</strong> &nbsp;&nbsp;
-            {order.orderPurchaseValue}
-          </p>
-          {orderStatus === "COMPLETED" && (
-            <span>
-              <p>
-                <strong>Delivery Docket No.</strong> &nbsp;&nbsp;
-                {order.deliveryDocketNumber}
-              </p>
-              <p>
-                <strong>Delivery Service Name</strong> &nbsp;&nbsp;
-                {order.deliveryServiceName}
-              </p>
-            </span>
+          <div className="order-summary">
+            <h3>Order Summary</h3>
+            <p>Delivery Charge: &nbsp;&nbsp;₹{order.deliveryCharge}</p>
+            <p>
+              <strong>Total Order Value:</strong> &nbsp;&nbsp;₹
+              {order.orderValue}
+            </p>
+            <p>
+              <strong>Total Purchase Value:</strong> &nbsp;&nbsp;
+              {order.orderPurchaseValue}
+            </p>
+            {orderStatus === "COMPLETED" && (
+              <span>
+                <p>
+                  <strong>Delivery Docket No.</strong> &nbsp;&nbsp;
+                  {order.deliveryDocketNumber}
+                </p>
+                <p>
+                  <strong>Delivery Service Name</strong> &nbsp;&nbsp;
+                  {order.deliveryServiceName}
+                </p>
+              </span>
+            )}
+          </div>
+          {order.status === "COMPLETED" && (
+            <div className="flex justify-end">
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => downloadInvoice()}
+              >
+                <p className="font-sm">Download Invoice</p>
+              </Button>
+            </div>
           )}
         </div>
-        {order.status === "COMPLETED" && (
-          <div className="flex justify-end">
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => downloadInvoice()}
-            >
-              <p className="font-sm">Download Invoice</p>
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );

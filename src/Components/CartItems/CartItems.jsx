@@ -5,27 +5,35 @@ import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../Context/LoginContext";
 import AddToCartButton from "../AddToCartButton/AddToCartButton";
 import BackButton from "../BackButton/BackButton";
+import { toast } from "react-toastify";
 
 const CartItems = () => {
-  const { products, cartItems, getTotalCartAmount } = useContext(ShopContext);
+  const {
+    products,
+    cartItems,
+    getTotalCartAmount,
+    updateDeliveryCharge,
+    getDeliveryCharge,
+  } = useContext(ShopContext);
   const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
   const [isCartEmpty, setIsCartEmpty] = useState(true);
-  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 499;
+  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 999;
   const checkout = () => {
     if (isCartEmpty) {
       alert("Add atleast 1 item to place an order.");
-    } else if (
-      loginState === "User" &&
-      getTotalCartAmount().totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
-    ) {
-      alert(
-        `Minimum order value should ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY} to get a free delivery.`
-      );
     } else if (localStorage.getItem("auth-token")) {
+      if (
+        loginState === "User" &&
+        getTotalCartAmount().totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
+      ) {
+        toast(
+          `Order value is less than ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY}. Delivery charge will be applicable. `
+        );
+      }
       navigate("/checkout");
     } else {
-      alert("Login to place order.");
+      toast.error("Login to place order.");
       navigate("/login");
     }
   };
@@ -104,6 +112,11 @@ const CartItems = () => {
             <div className="cartitems-total-item">
               <p>Cart Purchase Value</p>
               <p>{getTotalCartAmount().totalPurchaseValue}</p>
+            </div>
+            <hr />
+            <div className="cartitems-total-item">
+              <p>Delivery Charge {"(Order value < 999)"}</p>
+              <p>&#8377;{getDeliveryCharge()}</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
