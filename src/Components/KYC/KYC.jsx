@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import { toastConfigs } from "../../Utils/toast.util";
 import KycDoc from "../../Components/KycDoc/KycDoc";
+import { banksInIndia } from "../../Utils/kyc.util";
 
 const KYC = () => {
   const { user } = useContext(LoginContext);
@@ -403,10 +404,13 @@ const KYC = () => {
             <label className="font-semibold text-sm" htmlFor="comments">
               Bank Name
             </label>
-            <input
+            <select
               name="comments"
               value={kycDetails?.details.chequeDetails?.bankName}
-              disabled={kycDetails?.details.chequeDetails?.status === "VERIFY"}
+              disabled={
+                kycDetails?.details.chequeDetails?.status === "VERIFY" ||
+                kycDetails?.details.chequeDetails?.status === "VERIFIED"
+              }
               className={`text-gray-600 rounded text-sm w-56 border-2 ${
                 errors["bankName"] === "Yes"
                   ? "border-red-600"
@@ -427,7 +431,14 @@ const KYC = () => {
                   };
                 });
               }}
-            />
+            >
+              <option value="">Select State</option>
+              {banksInIndia.map((bank, index) => (
+                <option key={index} value={bank}>
+                  {bank}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex flex-col">
             <label className="font-semibold text-sm" htmlFor="comments">
@@ -435,8 +446,12 @@ const KYC = () => {
             </label>
             <input
               name="comments"
+              type="number"
               value={kycDetails?.details.chequeDetails?.accountNumber}
-              disabled={kycDetails?.details.chequeDetails?.status === "VERIFY"}
+              disabled={
+                kycDetails?.details.chequeDetails?.status === "VERIFY" ||
+                kycDetails?.details.chequeDetails?.status === "VERIFIED"
+              }
               className={`text-gray-600 rounded text-sm w-56 border-2 ${
                 errors["accountNumber"] === "Yes"
                   ? "border-red-600"
@@ -466,7 +481,10 @@ const KYC = () => {
             <input
               name="comments"
               value={kycDetails?.details.chequeDetails?.ifsCode}
-              disabled={kycDetails?.details.chequeDetails?.status === "VERIFY"}
+              disabled={
+                kycDetails?.details.chequeDetails?.status === "VERIFY" ||
+                kycDetails?.details.chequeDetails?.status === "VERIFIED"
+              }
               className={`text-gray-600 rounded text-sm w-56 border-2 ${
                 errors["ifsCode"] === "Yes"
                   ? "border-red-600"
