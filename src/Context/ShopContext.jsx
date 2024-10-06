@@ -77,8 +77,10 @@ const ShopContextProvider = (props) => {
       }
     }
 
-    if (totalAmount < 999) {
+    if (totalAmount < 999 && loginState === "User") {
       setDeliveryCharge(100);
+    } else {
+      setDeliveryCharge(0);
     }
     return {
       totalAmount: roundTo2Decimals(totalAmount + deliveryCharge),
