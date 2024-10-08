@@ -42,15 +42,7 @@ const ShopContextProvider = (props) => {
     fetch(serverIp + "/getallitems")
       .then((res) => res.json())
       .then((data) => {
-        if (loginState === "Branch") {
-          setProducts(data);
-        } else {
-          setProducts(
-            data.filter((product) => {
-              return product.available === true;
-            })
-          );
-        }
+        setProducts(data);
       });
 
     if (localStorage.getItem("auth-token")) {
