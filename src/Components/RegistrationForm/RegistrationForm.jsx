@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./RegistrationForm.css";
 import { indianStates } from "../../Utils/signup.util";
+import Modal from "../../Components/Modal/ModalComponent";
 
 function RegistrationForm({ guideIdDefault, setState }) {
   const serverIp = process.env.REACT_APP_SERVER_IP;
@@ -21,8 +22,18 @@ function RegistrationForm({ guideIdDefault, setState }) {
   // The tnc checkbox state
   const [tncCheckbox, setTncCheckbox] = useState(false);
 
+  const [openModal, setModalOpen] = useState(false);
+
   // The state of form errors
   const [errors, setErrors] = useState({});
+
+  const submitHandler = (state) => {
+    if (state === "ACCEPT") {
+      signUp();
+    } else {
+      setModalOpen(false);
+    }
+  };
 
   // Updates form state on any change
   const handleChange = (e) => {
@@ -34,8 +45,8 @@ function RegistrationForm({ guideIdDefault, setState }) {
   };
 
   // Post api call on signup
+  let dataObj;
   const signUp = async () => {
-    let dataObj;
     console.log("Signup called!");
     if (validateForm()) {
       await fetch(serverIp + "/signup", {
@@ -53,9 +64,6 @@ function RegistrationForm({ guideIdDefault, setState }) {
 
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
-        alert(
-          "Account successfully created! Your SM ID is : " + dataObj.newSmId
-        );
         window.location.replace("/");
       } else {
         alert(dataObj.errors);
@@ -331,11 +339,11 @@ function RegistrationForm({ guideIdDefault, setState }) {
         <button
           onClick={() => {
             if (validateForm()) {
-              signUp();
+              setModalOpen(true);
             }
           }}
         >
-          Register
+          Proceed to Register
         </button>
 
         <p className="loginsignup-login">
@@ -349,6 +357,13 @@ function RegistrationForm({ guideIdDefault, setState }) {
           </span>
         </p>
       </div>
+      <Modal
+        title="Just one more step"
+        message="Place your first order to complete registration"
+        isOpen={openModal}
+        acceptMessage="Proceed to make purchase"
+        submitHandler={submitHandler}
+      />
     </div>
   );
 }
