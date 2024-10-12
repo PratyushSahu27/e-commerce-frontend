@@ -361,6 +361,7 @@ function RegistrationForm({ guideIdDefault, setState }) {
         title="Just one more step"
         message="Place your first order to complete registration"
         isOpen={openModal}
+        isRejectEnabled
         acceptMessage="Proceed to make purchase"
         submitHandler={submitHandler}
       />

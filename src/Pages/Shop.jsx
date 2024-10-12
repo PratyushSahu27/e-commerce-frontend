@@ -11,7 +11,7 @@ const Shop = ({ category }) => {
     <div>
       <Hero />
       {loginState === "User" &&
-        user &&
+        user.smId &&
         (user.isActive === null || !user.isActive) && (
           <div className="h-24 bg-stone-900 flex justify-center items-center text-lg font-extrabold text-white gap-4">
             <img src={exclamation} className="h-12" />

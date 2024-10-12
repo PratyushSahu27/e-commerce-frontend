@@ -26,15 +26,15 @@ const Modal = ({
               onClick={() => submitHandler("REJECT", type)}
               disabled={loading}
             >
-              Cancel
+              <p className="text-sm">Cancel</p>
             </button>
           )}
           <button
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
+            className="bg-green-600 hover:bg-green-700 text-white font-extrabold py-2 px-4 rounded "
             onClick={() => submitHandler("ACCEPT", type)}
             disabled={loading}
           >
-            {acceptMessage ?? "Confirm"}
+            <p className="text-sm">{acceptMessage ?? "Confirm"}</p>
           </button>
         </div>
       </div>
