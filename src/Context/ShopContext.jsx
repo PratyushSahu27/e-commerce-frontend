@@ -8,6 +8,7 @@ const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   const { loginState } = useContext(LoginContext);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
+  const [isCartLoading, setIsCartLoading] = useState(false);
 
   const getDefaultCart = () => {
     let cart = {};
@@ -19,6 +20,7 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   function getCart() {
+    setIsCartLoading(true);
     try {
       fetch(serverIp + "/getcart", {
         method: "POST",
@@ -32,9 +34,11 @@ const ShopContextProvider = (props) => {
         .then((resp) => resp.json())
         .then((data) => {
           setCartItems(data);
+          setIsCartLoading(false);
         });
     } catch (e) {
       console.log("Could not fetch cart");
+      setIsCartLoading(false);
     }
   }
 
@@ -108,7 +112,7 @@ const ShopContextProvider = (props) => {
   };
 
   const addToCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+    setIsCartLoading(true);
     if (localStorage.getItem("auth-token") && loginState === "User") {
       fetch(serverIp + "/addtocart", {
         method: "POST",
@@ -121,7 +125,12 @@ const ShopContextProvider = (props) => {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          console.log(data);
+          setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+          setIsCartLoading(false);
+        })
+        .catch((error) => {
+          console.log("Error occured while adding item to cart: ", error);
+          setIsCartLoading(false);
         });
     }
   };
@@ -139,7 +148,7 @@ const ShopContextProvider = (props) => {
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+    setIsCartLoading(true);
     if (localStorage.getItem("auth-token") && loginState === "User") {
       fetch(serverIp + "/removefromcart", {
         method: "POST",
@@ -152,7 +161,13 @@ const ShopContextProvider = (props) => {
       })
         .then((resp) => resp.json())
         .then((data) => {
+          setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
           console.log(data);
+          setIsCartLoading(false);
+        })
+        .catch((error) => {
+          console.log("Error occured while adding item to cart: ", error);
+          setIsCartLoading(false);
         });
     }
   };
@@ -170,6 +185,8 @@ const ShopContextProvider = (props) => {
     setCartItems,
     updateDeliveryCharge,
     getDeliveryCharge,
+    isCartLoading,
+    setIsCartLoading,
   };
   return (
     <ShopContext.Provider value={contextValue}>

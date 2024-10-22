@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
-import { Button, IconButton, Box } from "@mui/material";
+import { Button, IconButton, Box, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { ShopContext } from "../../Context/ShopContext";
 
 function AddToCartButton({ itemId, size, bg, items }) {
   const [quantity, setQuantity] = useState(items ?? 0);
-  const { addToCart, removeFromCart } = useContext(ShopContext);
+  const { addToCart, removeFromCart, isCartLoading } = useContext(ShopContext);
 
   const handleAdd = () => {
     setQuantity(quantity + 1);
@@ -25,7 +25,9 @@ function AddToCartButton({ itemId, size, bg, items }) {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: bg ?? "white",
+              backgroundColor: !isCartLoading
+                ? bg ?? "white"
+                : "rgba(70, 68, 68, 0.6)",
               color: "#ff1865",
               fontWeight: "bold",
               "&:hover": {
@@ -34,6 +36,7 @@ function AddToCartButton({ itemId, size, bg, items }) {
             }}
             onClick={handleAdd}
             size={size ?? "small"}
+            disabled={isCartLoading}
           >
             <span>Add to Cart</span>
           </Button>
@@ -42,7 +45,9 @@ function AddToCartButton({ itemId, size, bg, items }) {
             <IconButton
               onClick={handleRemove}
               sx={{
-                backgroundColor: bg ?? "white",
+                backgroundColor: !isCartLoading
+                  ? bg ?? "white"
+                  : "rgba(70, 68, 68, 0.6)",
                 color: "#ff1865",
                 fontWeight: "bold",
                 marginRight: "5px",
@@ -51,10 +56,17 @@ function AddToCartButton({ itemId, size, bg, items }) {
                 },
               }}
               size={size ?? "small"}
+              disabled={isCartLoading}
             >
               <RemoveIcon />
             </IconButton>
-            <Box mx={1}>{quantity}</Box>
+            <Box mx={1}>
+              {isCartLoading ? (
+                <CircularProgress size={24} /> // Show loader when loading
+              ) : (
+                quantity
+              )}
+            </Box>
             <IconButton
               onClick={handleAdd}
               sx={{
@@ -67,6 +79,7 @@ function AddToCartButton({ itemId, size, bg, items }) {
                 },
               }}
               size={size ?? "small"}
+              disabled={isCartLoading}
             >
               <AddIcon />
             </IconButton>
