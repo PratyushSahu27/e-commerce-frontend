@@ -31,7 +31,6 @@ const PaymentHandler = ({
     if (isTransactionSuccess && paymentStatus && merchantTransactionId) {
       if (paymentStatus === "PAYMENT_SUCCESS") {
         setOrderTransactionStatus(paymentStatus);
-        console.log("IF block");
         setTimeout(() => navigate("/orders"), 5000);
       } else if (
         paymentStatus === "PAYMENT_PENDING" ||

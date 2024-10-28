@@ -14,6 +14,7 @@ const CartItems = () => {
     getTotalCartAmount,
     updateDeliveryCharge,
     getDeliveryCharge,
+    removeAllQuantityOfItemFromCart,
   } = useContext(ShopContext);
   const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
@@ -51,8 +52,14 @@ const CartItems = () => {
       <hr />
       {Object.keys(cartItems).map((itemId) => {
         if (cartItems[itemId] > 0) {
-          isCartEmpty && setIsCartEmpty(false);
           const product = products.filter((product) => product.id == itemId)[0];
+          // Product is not there then remove that product from cart
+          if (!product) {
+            removeAllQuantityOfItemFromCart(itemId);
+            toast.error("Some unavailable items were removed from cart.");
+            return null;
+          }
+          isCartEmpty && setIsCartEmpty(false);
           return (
             <div key={itemId}>
               <div className="cartitems-format-main cartitems-format">
@@ -124,13 +131,15 @@ const CartItems = () => {
               <h3>&#8377;{getTotalCartAmount().totalAmount}</h3>
             </div>
           </div>
-          <button onClick={() => checkout()}>PROCEED TO CHECKOUT</button>
+          <button onClick={() => checkout()} disabled={isCartEmpty}>
+            PROCEED TO CHECKOUT
+          </button>
         </div>
         <div className="cartitems-promocode">
           <p>If you have a promo code, Enter it here</p>
           <div className="cartitems-promobox">
             <input type="text" placeholder="promo code" />
-            <button>Submit</button>
+            <button disabled>Submit</button>
           </div>
         </div>
       </div>

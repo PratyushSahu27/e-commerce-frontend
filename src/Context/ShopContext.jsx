@@ -68,12 +68,14 @@ const ShopContextProvider = (props) => {
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
         let itemInfo = products.find((product) => product.id === Number(item));
-        totalAmount += cartItems[item] * itemInfo.shoora_price;
-        totalPurchaseValue += cartItems[item] * itemInfo.purchase_value;
+        if (itemInfo) {
+          totalAmount += cartItems[item] * itemInfo.shoora_price;
+          totalPurchaseValue += cartItems[item] * itemInfo.purchase_value;
+        }
       }
     }
 
-    if (totalAmount < 999 && loginState === "User") {
+    if (totalAmount > 0 && totalAmount < 999 && loginState === "User") {
       setDeliveryCharge(100);
     } else {
       setDeliveryCharge(0);
@@ -172,6 +174,30 @@ const ShopContextProvider = (props) => {
     }
   };
 
+  const removeAllQuantityOfItemFromCart = async (itemId) => {
+    setIsCartLoading(true);
+    if (localStorage.getItem("auth-token") && loginState === "User") {
+      fetch(serverIp + "/removeallquantityofitemfromcart", {
+        method: "POST",
+        headers: {
+          Accept: "application/form-data",
+          "auth-token": `${localStorage.getItem("auth-token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ itemId: itemId }),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          setCartItems((prev) => ({ ...prev, [itemId]: 0 }));
+          setIsCartLoading(false);
+        })
+        .catch((error) => {
+          console.log("Error occured while adding item to cart: ", error);
+          setIsCartLoading(false);
+        });
+    }
+  };
+
   const contextValue = {
     cartItems,
     products,
@@ -187,6 +213,7 @@ const ShopContextProvider = (props) => {
     getDeliveryCharge,
     isCartLoading,
     setIsCartLoading,
+    removeAllQuantityOfItemFromCart,
   };
   return (
     <ShopContext.Provider value={contextValue}>
