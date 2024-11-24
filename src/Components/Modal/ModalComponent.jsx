@@ -22,15 +22,15 @@ const Modal = ({
         <div className="flex justify-end space-x-4">
           {isRejectEnabled && (
             <button
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded"
+              className="bg-neutral-400 hover:bg-neutral-700 text-white font-semibold py-2 px-4 rounded"
               onClick={() => submitHandler("REJECT", type)}
               disabled={loading}
             >
-              <p className="text-sm">Cancel</p>
+              <p className="text-sm">{rejectMessage ?? "Cancel"}</p>
             </button>
           )}
           <button
-            className="bg-green-600 hover:bg-green-700 text-white font-extrabold py-2 px-4 rounded "
+            className="bg-lime-500 hover:bg-lime-700 text-white font-extrabold py-2 px-4 rounded "
             onClick={() => submitHandler("ACCEPT", type)}
             disabled={loading}
           >

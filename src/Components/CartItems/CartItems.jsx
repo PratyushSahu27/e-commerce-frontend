@@ -6,6 +6,7 @@ import { LoginContext } from "../../Context/LoginContext";
 import AddToCartButton from "../AddToCartButton/AddToCartButton";
 import BackButton from "../BackButton/BackButton";
 import { toast } from "react-toastify";
+import Modal from "../../Components/Modal/ModalComponent";
 
 const CartItems = () => {
   const {
@@ -19,23 +20,33 @@ const CartItems = () => {
   const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
   const [isCartEmpty, setIsCartEmpty] = useState(true);
-  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 999;
+  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 50;
+  const [openModal, setOpenModal] = useState(false);
+
   const checkout = () => {
     if (isCartEmpty) {
       alert("Add atleast 1 item to place an order.");
     } else if (localStorage.getItem("auth-token")) {
       if (
         loginState === "User" &&
-        getTotalCartAmount().totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
+        getTotalCartAmount().totalPurchaseValue <
+          MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
       ) {
-        toast(
-          `Order value is less than ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY}. Delivery charge will be applicable. `
-        );
+        setOpenModal(true);
+      } else {
+        navigate("/checkout");
       }
-      navigate("/checkout");
     } else {
       toast.error("Login to place order.");
       navigate("/login");
+    }
+  };
+
+  const submitHandler = (state) => {
+    if (state === "ACCEPT") {
+      navigate("/checkout");
+    } else {
+      setOpenModal(false);
     }
   };
 
@@ -122,7 +133,7 @@ const CartItems = () => {
             </div>
             <hr />
             <div className="cartitems-total-item">
-              <p>Delivery Charge {"(Order value < 999)"}</p>
+              <p>Delivery Charge</p>
               <p>&#8377;{getDeliveryCharge()}</p>
             </div>
             <hr />
@@ -143,6 +154,15 @@ const CartItems = () => {
           </div>
         </div>
       </div>
+      <Modal
+        title={`Order purchase value is less than ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY}.`}
+        message={`Delivery charge will be applicable.`}
+        isOpen={openModal}
+        isRejectEnabled
+        acceptMessage="Proceed to make purchase"
+        rejectMessage="Continue buying"
+        submitHandler={submitHandler}
+      />
     </div>
   );
 };
