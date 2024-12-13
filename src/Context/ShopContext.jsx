@@ -6,13 +6,13 @@ export const ShopContext = createContext(null);
 const ShopContextProvider = (props) => {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   const [products, setProducts] = useState([]);
-  const { loginState } = useContext(LoginContext);
+  const { loginState, user } = useContext(LoginContext);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [isCartLoading, setIsCartLoading] = useState(false);
 
   const getDefaultCart = () => {
     let cart = {};
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 1000; i++) {
       cart[i] = 0;
     }
     return cart;
@@ -132,16 +132,20 @@ const ShopContextProvider = (props) => {
         .then((resp) => resp.json())
         .then((data) => {
           setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-          setIsCartLoading(false);
         })
         .catch((error) => {
           console.log("Error occured while adding item to cart: ", error);
-          setIsCartLoading(false);
         });
+    } else {
+      setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
     }
+    setIsCartLoading(false);
   };
 
-  const addAllToCart = () => {
+  const addAllToCart = (isActive) => {
+    if (loginState === "User" && !isActive) {
+      return Promise.resolve();
+    }
     return fetch(serverIp + "/addalltocart", {
       method: "POST",
       headers: {

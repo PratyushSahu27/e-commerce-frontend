@@ -51,7 +51,9 @@ const LoginSignup = ({ customState }) => {
     if (dataObj.success) {
       localStorage.setItem("auth-token", dataObj.token);
       loginState === "User"
-        ? addAllToCart().then(() => window.location.replace("/"))
+        ? addAllToCart(dataObj.user.isActive).then(() =>
+            window.location.replace("/")
+          )
         : window.location.replace("/");
     } else {
       alert(dataObj.errors);

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import logo from "../Assets/Shoora_Mall_transparent.png";
@@ -18,8 +18,18 @@ import { LoginContext } from "../../Context/LoginContext";
 
 const Navbar = ({ setCategory }) => {
   const { getTotalCartItems } = useContext(ShopContext);
-  const { loginState } = useContext(LoginContext);
+  const { loginState, user } = useContext(LoginContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    if (
+      loginState === "User" &&
+      Object.keys(user).length !== 0 &&
+      !user.isActive
+    ) {
+      setCategory("First Buy");
+    }
+  }, [loginState, setCategory, user]);
 
   const dropdownItems =
     loginState === "User"
@@ -121,9 +131,13 @@ const Navbar = ({ setCategory }) => {
         <Button onClick={() => setIsDrawerOpen(true)}>
           <img className="nav-dropdown" src={menu_icon} alt="" />
         </Button>
-        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-          {DrawerList}
-        </Drawer>
+        {((loginState === "User" && user.isActive) ||
+          (loginState === "User" && Object.keys(user).length === 0) ||
+          loginState === "Branch") && (
+          <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+            {DrawerList}
+          </Drawer>
+        )}
         <Link to="/" style={{ textDecoration: "none" }} className="nav-logo">
           <img src={logo} alt="logo" />
           {/* <p>Shoora Mall</p> */}
