@@ -16,6 +16,9 @@ const NewCollections = ({ category }) => {
           .filter((item) =>
             loginState === "User" ? item.available === true : item
           )
+          .filter((item) =>
+            category !== "First Buy" ? item.category !== "First Buy" : item
+          )
           .filter((item) => (category ? item.category === category : item))
           .map((item, i) => {
             return (
