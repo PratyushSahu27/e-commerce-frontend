@@ -57,6 +57,7 @@ const LoginContextProvider = (props) => {
     loginState,
     setLoginState,
     isKycComplete,
+    setUser,
   };
   return (
     <LoginContext.Provider value={contextValue}>

@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import { Menu } from "@mui/base/Menu";
 import { MenuItem, menuItemClasses } from "@mui/base/MenuItem";
 import { MenuButton } from "@mui/base/MenuButton";
@@ -10,7 +10,7 @@ import { LoginContext } from "../../Context/LoginContext";
 import { getStringOfMaxLength } from "../../Utils/string.util";
 
 export default function MenuSimple({ items }) {
-  const { user, branch, loginState } = useContext(LoginContext);
+  const { user, branch, loginState, setUser } = useContext(LoginContext);
   const name =
     loginState === "User"
       ? user.name
@@ -38,6 +38,7 @@ export default function MenuSimple({ items }) {
         localStorage.removeItem("auth-token");
         localStorage.removeItem("smId");
         window.location.replace("/");
+        setUser({});
         break;
       default:
         navigate("/");

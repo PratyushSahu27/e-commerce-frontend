@@ -131,7 +131,7 @@ const Navbar = ({ setCategory }) => {
         <Button onClick={() => setIsDrawerOpen(true)}>
           <img className="nav-dropdown" src={menu_icon} alt="" />
         </Button>
-        {((loginState === "User" && user.isActive) ||
+        {((loginState === "User" && user?.isActive) ||
           (loginState === "User" && Object.keys(user).length === 0) ||
           loginState === "Branch") && (
           <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>

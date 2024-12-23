@@ -6,11 +6,34 @@ import { LoginContext } from "../../Context/LoginContext";
 
 const NewCollections = ({ category }) => {
   const { products } = useContext(ShopContext);
-  const { loginState } = useContext(LoginContext);
+  const { loginState, user } = useContext(LoginContext);
 
   return (
     <div className="new-collections">
-      <h1>{category ? category : "Newly added products "}</h1>
+      {Object.keys(user).length === 0 && (
+        <>
+          <h1>First purchase products</h1>
+          <div className="collections">
+            {products
+              .filter((item) => (user ? item.category === "First Buy" : false))
+              .map((item, i) => {
+                return (
+                  <Item
+                    key={item.id}
+                    id={item.id}
+                    name={item.name}
+                    image={item.image}
+                    market_retail_price={item.market_retail_price}
+                    shoora_price={item.shoora_price}
+                    purchase_value={item.purchase_value}
+                    is_available={item.available}
+                  />
+                );
+              })}
+          </div>
+        </>
+      )}
+      <h1>{category ? category : "All products"}</h1>
       <h5 className="text-red-700 text-xs px-3">
         * These items are not available for first purchase by new members.
       </h5>
