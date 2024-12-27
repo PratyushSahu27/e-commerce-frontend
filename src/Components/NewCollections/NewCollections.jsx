@@ -27,6 +27,7 @@ const NewCollections = ({ category }) => {
                     shoora_price={item.shoora_price}
                     purchase_value={item.purchase_value}
                     is_available={item.available}
+                    showAddToCart={false}
                   />
                 );
               })}

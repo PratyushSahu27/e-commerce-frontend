@@ -20,7 +20,7 @@ const CartItems = () => {
   const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
   const [isCartEmpty, setIsCartEmpty] = useState(true);
-  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 50;
+  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 1500;
   const [openModal, setOpenModal] = useState(false);
 
   const checkout = () => {
@@ -29,7 +29,7 @@ const CartItems = () => {
     } else if (localStorage.getItem("auth-token")) {
       if (
         loginState === "User" &&
-        getTotalCartAmount().totalPurchaseValue <
+        getTotalCartAmount().totalAmountWithoutDeliveryCharge <
           MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
       ) {
         setOpenModal(true);
