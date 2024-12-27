@@ -36,3 +36,8 @@ export const indianStates = [
   "Delhi",
   "Puducherry",
 ];
+
+export const GuideSideEnum = {
+  LEFT: "left",
+  RIGHT: "right",
+};

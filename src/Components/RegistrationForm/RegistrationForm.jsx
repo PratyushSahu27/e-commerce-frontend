@@ -1,13 +1,15 @@
 import { useState } from "react";
 import "./RegistrationForm.css";
-import { indianStates } from "../../Utils/signup.util";
+import { GuideSideEnum, indianStates } from "../../Utils/signup.util";
 import Modal from "../../Components/Modal/ModalComponent";
+import { toast } from "react-toastify";
 
 function RegistrationForm({ guideIdDefault, setState }) {
   const serverIp = process.env.REACT_APP_SERVER_IP;
   // The registration form state
   const [formData, setFormData] = useState({
     guideId: guideIdDefault ? guideIdDefault : "",
+    guideSide: "",
     fullName: "",
     phoneNumber: "",
     email: "",
@@ -129,6 +131,11 @@ function RegistrationForm({ guideIdDefault, setState }) {
       errors["state"] = "Please select a state";
     }
 
+    if (!formData.guideSide) {
+      formIsValid = false;
+      errors["guideSide"] = "Please select a state";
+    }
+
     if (!formData.city) {
       formIsValid = false;
       errors["city"] = "Please enter city name";
@@ -150,7 +157,7 @@ function RegistrationForm({ guideIdDefault, setState }) {
 
     if (!tncCheckbox) {
       formIsValid = false;
-      errors["termsAndConditions"] = "Terms and conditions should be accepted";
+      toast.error("Please read and accept term and conditions to register");
     }
     setErrors(errors);
     return formIsValid;
@@ -161,167 +168,209 @@ function RegistrationForm({ guideIdDefault, setState }) {
       <h3>Enter your details</h3>
       <div className="signUp-form">
         <div className="form-input">
-          <label htmlFor="guideId" className="required-field">
-            Guide ID{" "}
-          </label>
-          <input
-            className="loginsignup-field"
-            type="text"
-            id="guideId"
-            name="guideId"
-            value={formData.guideId}
-            onChange={handleChange}
-            required
-            disabled={guideIdDefault ? true : false}
-          />
+          <div className="form-input-top">
+            <label htmlFor="guideId" className="required-field">
+              Guide ID{" "}
+            </label>
+            <input
+              className="loginsignup-field"
+              type="text"
+              id="guideId"
+              name="guideId"
+              value={formData.guideId}
+              onChange={handleChange}
+              required
+              disabled={guideIdDefault ? true : false}
+            />
+          </div>
           <div className="error">{errors.guideId}</div>
         </div>
         <div className="form-input">
-          <label htmlFor="fullName" className="required-field">
-            Full Name{" "}
-          </label>
-          <input
-            className="loginsignup-field"
-            type="text"
-            id="fullName"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-input-top">
+            <label htmlFor="guideSide" className="required-field">
+              Side of your guide{" "}
+            </label>
+            <select
+              className="loginsignup-field text-black font-bold"
+              id="guideSide"
+              name="guideSide"
+              value={formData.guideSide}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select guide side</option>
+              {Object.keys(GuideSideEnum).map((side, index) => (
+                <option key={index} value={GuideSideEnum[side]}>
+                  {side}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="error">{errors.guideSide}</div>
+        </div>
+        <div className="form-input">
+          <div className="form-input-top">
+            <label htmlFor="fullName" className="required-field">
+              Full Name{" "}
+            </label>
+            <input
+              className="loginsignup-field"
+              type="text"
+              id="fullName"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.fullName}</div>
         </div>
         <div className="form-input">
-          <label htmlFor="phoneNumber" className="required-field">
-            Phone Number{" "}
-          </label>
-          <input
-            className="loginsignup-field"
-            type="number"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-input-top">
+            <label htmlFor="phoneNumber" className="required-field">
+              Phone Number{" "}
+            </label>
+            <input
+              className="loginsignup-field"
+              type="number"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.phoneNumber}</div>
         </div>
         <div className="form-input">
-          <label htmlFor="email" className="required-field">
-            Email
-          </label>
-          <input
-            className="loginsignup-field"
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-input-top">
+            <label htmlFor="email" className="required-field">
+              Email
+            </label>
+            <input
+              className="loginsignup-field"
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.email}</div>
         </div>
         <div className="form-input">
-          <label htmlFor="password" className="required-field">
-            Password{" "}
-          </label>
-          <input
-            className="loginsignup-field"
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-input-top">
+            <label htmlFor="password" className="required-field">
+              Password{" "}
+            </label>
+            <input
+              className="loginsignup-field"
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.password}</div>
         </div>
 
         <div className="form-input">
-          <label htmlFor="retypepassword" className="required-field">
-            Confirm Password
-          </label>
-          <input
-            className="loginsignup-field"
-            type="password"
-            id="retypePassword"
-            name="retypePassword"
-            value={formData.retypePassword}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-input-top">
+            <label htmlFor="retypepassword" className="required-field">
+              Confirm Password
+            </label>
+            <input
+              className="loginsignup-field"
+              type="password"
+              id="retypePassword"
+              name="retypePassword"
+              value={formData.retypePassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.retypePassword}</div>
         </div>
 
         <div className="form-input">
-          <label htmlFor="state" className="required-field">
-            State{" "}
-          </label>
-          <select
-            className="loginsignup-field"
-            id="state"
-            name="state"
-            value={formData.state}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select State</option>
-            {indianStates.map((state, index) => (
-              <option key={index} value={state}>
-                {state}
-              </option>
-            ))}
-          </select>
+          <div className="form-input-top">
+            <label htmlFor="state" className="required-field">
+              State{" "}
+            </label>
+            <select
+              className="loginsignup-field text-black font-bold"
+              id="state"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select State</option>
+              {indianStates.map((state, index) => (
+                <option key={index} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="error">{errors.state}</div>
         </div>
 
         <div className="form-input">
-          <label htmlFor="city" className="required-field">
-            City{" "}
-          </label>
-          <input
-            className="loginsignup-field"
-            type="text"
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-input-top">
+            <label htmlFor="city" className="required-field">
+              City{" "}
+            </label>
+            <input
+              className="loginsignup-field"
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.city}</div>
         </div>
 
         <div className="form-input">
-          <label htmlFor="address" className="required-field">
-            Address{" "}
-          </label>
-          <input
-            className="loginsignup-field"
-            type="text"
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-input-top">
+            <label htmlFor="address" className="required-field">
+              Address{" "}
+            </label>
+            <input
+              className="loginsignup-field"
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.address}</div>
         </div>
 
         <div className="form-input">
-          <label htmlFor="pincode" className="required-field">
-            Pincode{" "}
-          </label>
-
+          <div className="form-input-top">
+            <label htmlFor="pincode" className="required-field">
+              Pincode{" "}
+            </label>
+            <input
+              className="loginsignup-field"
+              type="number"
+              id="pincode"
+              name="pincode"
+              value={formData.pincode}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="error">{errors.pincode}</div>
-          <input
-            className="loginsignup-field"
-            type="number"
-            id="pincode"
-            name="pincode"
-            value={formData.pincode}
-            onChange={handleChange}
-            required
-          />
         </div>
 
         <div className="loginsignup-agree">
@@ -333,7 +382,6 @@ function RegistrationForm({ guideIdDefault, setState }) {
             onChange={() => setTncCheckbox(!tncCheckbox)}
           />
           <p>By continuing, i agree to the terms of use & privacy policy.</p>
-          {/* <div className="error">{errors.termsAndConditions}</div> */}
         </div>
 
         <button

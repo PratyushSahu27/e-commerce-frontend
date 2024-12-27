@@ -7,7 +7,7 @@
 .loginsignup-container {
   width: 90%;
   max-width: 550px;
-  background: white;
+  background: #1f1f1f;
   margin: auto;
   padding: 30px 40px;
   box-sizing: border-box;
@@ -16,6 +16,7 @@
   margin: 15px 0px;
   font-size: 2rem;
   font-weight: 800;
+  color: #fff;
 }
 .loginsignup-fields {
   display: flex;
