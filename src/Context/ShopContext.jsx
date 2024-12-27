@@ -75,7 +75,7 @@ const ShopContextProvider = (props) => {
       }
     }
 
-    if (totalAmount > 0 && totalAmount < 1500 && loginState === "User") {
+    if (totalAmount > 0 && totalAmount < 2000 && loginState === "User") {
       setDeliveryCharge(100);
     } else {
       setDeliveryCharge(0);

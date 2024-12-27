@@ -20,7 +20,7 @@ const CartItems = () => {
   const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
   const [isCartEmpty, setIsCartEmpty] = useState(true);
-  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 1500;
+  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 2000;
   const [openModal, setOpenModal] = useState(false);
 
   const checkout = () => {
