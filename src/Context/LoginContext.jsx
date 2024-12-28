@@ -24,6 +24,12 @@ const LoginContextProvider = (props) => {
         if (data.state === "User") {
           setUser(data.userData);
           setLoginState(data.state);
+          if (!user) {
+            localStorage.removeItem("auth-token");
+            localStorage.removeItem("smId");
+            window.location.replace("/");
+            setUser({});
+          }
           fetch(serverIp + "/iskyccomplete", {
             method: "POST",
             headers: {
