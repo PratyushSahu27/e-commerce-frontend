@@ -15,6 +15,9 @@ const NewCollections = ({ category }) => {
           <h1>First purchase products</h1>
           <div className="collections">
             {products
+              .filter((item) =>
+                loginState === "User" ? item.available === true : item
+              )
               .filter((item) => (user ? item.category === "First Buy" : false))
               .map((item, i) => {
                 return (
