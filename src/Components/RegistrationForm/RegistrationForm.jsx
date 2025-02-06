@@ -23,15 +23,29 @@ function RegistrationForm({ guideIdDefault, setState }) {
 
   // The tnc checkbox state
   const [tncCheckbox, setTncCheckbox] = useState(false);
-
   const [openModal, setModalOpen] = useState(false);
+  const [openDetailsModal, setDetailsModalOpen] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    name: "",
+    smId: "",
+    password: "",
+  });
 
   // The state of form errors
   const [errors, setErrors] = useState({});
 
+  const detailsModalSubmitHandler = (state) => {
+    if (state === "ACCEPT") {
+      setDetailsModalOpen(false);
+      setModalOpen(true);
+    } else {
+      setDetailsModalOpen(false);
+    }
+  };
+
   const submitHandler = (state) => {
     if (state === "ACCEPT") {
-      signUp();
+      window.location.replace("/");
     } else {
       setModalOpen(false);
     }
@@ -66,7 +80,12 @@ function RegistrationForm({ guideIdDefault, setState }) {
 
       if (dataObj.success) {
         localStorage.setItem("auth-token", dataObj.token);
-        window.location.replace("/");
+        setUserDetails({
+          name: dataObj.name,
+          smId: dataObj.smId,
+          password: dataObj.password,
+        });
+        setDetailsModalOpen(true);
       } else {
         alert(dataObj.errors);
       }
@@ -161,6 +180,16 @@ function RegistrationForm({ guideIdDefault, setState }) {
     }
     setErrors(errors);
     return formIsValid;
+  };
+
+  const buildMessage = () => {
+    return (
+      <div>
+        <p>Name: {userDetails.name}</p>
+        <p>SM ID: {userDetails.smId}</p>
+        <p>Password: {userDetails.password}</p>
+      </div>
+    );
   };
 
   return (
@@ -387,7 +416,7 @@ function RegistrationForm({ guideIdDefault, setState }) {
         <button
           onClick={() => {
             if (validateForm()) {
-              setModalOpen(true);
+              signUp();
             }
           }}
         >
@@ -412,6 +441,14 @@ function RegistrationForm({ guideIdDefault, setState }) {
         isRejectEnabled
         acceptMessage="Proceed to make purchase"
         submitHandler={submitHandler}
+      />
+      <Modal
+        title="ID will be generated with following details"
+        message={buildMessage()}
+        isOpen={openDetailsModal}
+        isRejectEnabled
+        acceptMessage="Proceed"
+        submitHandler={detailsModalSubmitHandler}
       />
     </div>
   );

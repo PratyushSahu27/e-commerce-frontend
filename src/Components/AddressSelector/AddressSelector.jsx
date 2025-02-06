@@ -101,7 +101,7 @@ const AddressSelector = ({
       error["buyer"] = "Enter valid SM ID";
       isBuyerValid = false;
     } else {
-      fetch(serverIp + "/getuser", {
+      fetch(serverIp + "/getuserorbranch", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
