@@ -16,11 +16,11 @@ const CartItems = () => {
     updateDeliveryCharge,
     getDeliveryCharge,
     removeAllQuantityOfItemFromCart,
+    getMinCheckoutAmountForFreeDelivery
   } = useContext(ShopContext);
   const { loginState } = useContext(LoginContext);
   const navigate = useNavigate();
   const [isCartEmpty, setIsCartEmpty] = useState(true);
-  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 2000;
   const [openModal, setOpenModal] = useState(false);
 
   const checkout = () => {
@@ -30,7 +30,7 @@ const CartItems = () => {
       if (
         loginState === "User" &&
         getTotalCartAmount().totalAmountWithoutDeliveryCharge <
-          MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY
+          getMinCheckoutAmountForFreeDelivery()
       ) {
         setOpenModal(true);
       } else {
@@ -123,16 +123,6 @@ const CartItems = () => {
             </div>
             <hr />
             <div className="cartitems-total-item">
-              <p>Shipping Fee</p>
-              <p>Free</p>
-            </div>
-            <hr />
-            <div className="cartitems-total-item">
-              <p>Cart Purchase Value</p>
-              <p>{getTotalCartAmount().totalPurchaseValue}</p>
-            </div>
-            <hr />
-            <div className="cartitems-total-item">
               <p>Delivery Charge</p>
               <p>&#8377;{getDeliveryCharge()}</p>
             </div>
@@ -155,7 +145,7 @@ const CartItems = () => {
         </div>
       </div>
       <Modal
-        title={`Order purchase value is less than ${MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY}.`}
+        title={`Order purchase value is less than ${getMinCheckoutAmountForFreeDelivery()}.`}
         message={`Delivery charge will be applicable.`}
         isOpen={openModal}
         isRejectEnabled

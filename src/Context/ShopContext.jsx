@@ -10,6 +10,8 @@ const ShopContextProvider = (props) => {
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [isCartLoading, setIsCartLoading] = useState(false);
 
+  const MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY = 1000;
+
   const getDefaultCart = () => {
     let cart = {};
     for (let i = 0; i < 1000; i++) {
@@ -18,6 +20,10 @@ const ShopContextProvider = (props) => {
     return cart;
   };
   const [cartItems, setCartItems] = useState(getDefaultCart());
+
+  const getMinCheckoutAmountForFreeDelivery = () => {
+    return MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY;
+  }
 
   function getCart() {
     setIsCartLoading(true);
@@ -75,7 +81,7 @@ const ShopContextProvider = (props) => {
       }
     }
 
-    if (totalAmount > 0 && totalAmount < 2000 && loginState === "User") {
+    if (totalAmount > 0 && totalAmount < MIN_CHECKOUT_AMOUNT_FOR_FREE_DELIVERY && loginState === "User") {
       setDeliveryCharge(100);
     } else {
       setDeliveryCharge(0);
@@ -219,6 +225,7 @@ const ShopContextProvider = (props) => {
     isCartLoading,
     setIsCartLoading,
     removeAllQuantityOfItemFromCart,
+    getMinCheckoutAmountForFreeDelivery
   };
   return (
     <ShopContext.Provider value={contextValue}>

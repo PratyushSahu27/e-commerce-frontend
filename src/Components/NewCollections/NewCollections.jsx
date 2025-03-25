@@ -38,9 +38,7 @@ const NewCollections = ({ category }) => {
         </>
       )}
       <h1>{category ? category : "All products"}</h1>
-      <h5 className="text-red-700 text-xs px-3">
-        * These items are not available for first purchase by new members.
-      </h5>
+      
       <div className="collections">
         {products
           .filter((item) =>
