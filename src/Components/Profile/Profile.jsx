@@ -6,6 +6,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../BackButton/BackButton";
 import VerifiedTick from "../../Components/VerfiedTickmark/VerifiedTickmark";
+import ChangePassword from "../../Components/ChangePassword/ChangePassword";
 
 const Profile = () => {
   const { user, branch, loginState, isKycComplete } = useContext(LoginContext);
@@ -14,24 +15,24 @@ const Profile = () => {
   const profileLabelToObjectKeyMap =
     loginState === "User"
       ? {
-          "SM ID": "smId",
-          Name: "name",
-          "Guide ID": "guideId",
-          "Phone Number": "phoneNumber",
-          "Total Purchase Value collected": "total_pv",
-          "Email Address": "email",
-        }
+        "SM ID": "smId",
+        Name: "name",
+        "Guide ID": "guideId",
+        "Phone Number": "phoneNumber",
+        "Total Purchase Value collected": "total_pv",
+        "Email Address": "email",
+      }
       : {
-          "Branch ID": "branch_id",
-          "Branch Name": "branch_name",
-          Address: "address.address",
-          Landmark: "address.landmark",
-          City: "address.city",
-          State: "address.state",
-          Pincode: "address.pincode",
-          GSTIN: "gst_no",
-          "FSSAI License Number": "fssai_no",
-        };
+        "Branch ID": "branch_id",
+        "Branch Name": "branch_name",
+        Address: "address.address",
+        Landmark: "address.landmark",
+        City: "address.city",
+        State: "address.state",
+        Pincode: "address.pincode",
+        GSTIN: "gst_no",
+        "FSSAI License Number": "fssai_no",
+      };
 
   function getNestedValue(obj, path) {
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
@@ -72,7 +73,9 @@ const Profile = () => {
             >
               Copy Link
             </Button>
+            <ChangePassword />
           </div>
+
           {!isKycComplete ? (
             <div className="kyc-button mt-8 flex gap-8 items-center">
               <p className="text-fuchsia-700 font-bold">

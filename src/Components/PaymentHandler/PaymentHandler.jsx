@@ -140,17 +140,17 @@ const PaymentHandler = ({
       const reqBody =
         loginState === "User"
           ? {
-              name: user.name,
-              merchantUserId: user.smId,
-              mobileNumber: user.phoneNumber,
-              amount: totalAmount,
-            }
+            name: user.name,
+            merchantUserId: user.smId,
+            mobileNumber: user.phoneNumber,
+            amount: totalAmount,
+          }
           : {
-              name: buyer.name,
-              merchantUserId: buyer.smId,
-              mobileNumber: buyer.phoneNumber,
-              amount: totalAmount,
-            };
+            name: buyer.name,
+            merchantUserId: buyer.smId,
+            mobileNumber: buyer.phoneNumber,
+            amount: totalAmount,
+          };
 
       fetch(serverIp + "/payment", {
         method: "POST",
